@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    @@include('./_head.html', {
+        "path": "..",
+        "title": ""
+    })
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+</head>
+
+<body>
+    @@include('./_navigation.html', {
+        "path": "..",
+        "classes": "navbar-theme-primary"
+    })
+    <main>
+
+        @@include('./_preloader.html', {
+            "path": ".."
+        })
+
+        <section class="section pb-6 pb-md-7 pt-3 pt-md-4 bg-primary text-white">
+            <div class="container">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-12 col-lg-6">
+                        <h2 class="h3 font-weight-normal text-muted mb-4">The largest listing of graduate scholarships</h2>
+                        <h1 class="h1 font-weight-normal mb-3">3k scholarships. $5m in awards.</h1>
+                        <h1 class="h1 display-1 mb-3">100% Free.</h1>
+                        <p class="lead mb-3 mb-lg-5">New scholarships updated every week.</p>
+                        <div class="text-center text-primary mr-5">
+                            <a role="button" th:href="@{/scholarship-search}" class="btn btn-lg btn-light">Find Scholarships and Financial Aid</a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3">
+                        <img loading="lazy" class="rounded" th:src="@{/assets/img/pages/hippo-scholarship-cuted.jpg}" alt="CollegeHippo scholarship"/>
+                    </div>
+                </div>
+            </div>
+            <div class="pattern bottom"></div>
+        </section>
+        <section class="section section-md py-2 py-md-0 bg-white">
+            <div class="container">
+                <div class="row row-grid align-items-center">
+                    <div class="col-12 col-lg-5">
+                        <h2 class="font-weight-bolder mb-4">Graduate students owe $37 billion in loans</h2>
+                        <p class="lead mb-3 mb-lg-5">Graduate Programs account for 40 percent of federal student loans issued each year. That is more than $37 billion in loans each year.</p>
+                        <p class="lead mb-3 mb-lg-5">We will help you to reduce your tuition bill.</p>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-0 ml-lg-auto">
+                        <img loading="lazy" class="rounded" th:src="@{/assets/img/pages/loan.jpg}" alt="Loans">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section section-lg pt-6 pb-6 pt-md-7 pb-md-8 bg-primary">
+            <div class="pattern top"></div>
+            <div class="container">
+                <div class="row justify-content-center desktop-width-1200">
+                    <a class="mt-4" th:href="@{/scholarships/sign-up-scholarship}">
+                        <img class="rounded" th:src="@{|https://i.imgur.com/YvUUrqo.jpg|}" alt="Sign up for $1000 CollegeHippo scholarship">
+                    </a>
+                    <a class="mt-4 ml-md-5" th:href="@{/scholarships/match-with-online-masters-graduate-programs}">
+                        <img class="rounded" th:src="@{|https://i.imgur.com/22EdSRz.jpg|}" alt="Match me with Master’s Programs">
+                    </a>
+                    <a class="mt-4 ml-md-5" th:href="@{/scholarships/calculate-cost-graduate-program}">
+                        <img class="rounded" th:src="@{|https://i.imgur.com/ME0bYeL.jpg|}" alt="Calculate cost of Master’s Degree">
+                    </a>
+                </div>
+            </div>
+            <div class="pattern bottom"></div>
+        </section>
+
+        <section class="section section-md py-2 py-md-0 bg-white">
+            <div class="container">
+                <div class="row row-grid align-items-center">
+
+                    <div class="col-12 col-lg-6">
+                        <h2 class="font-weight-bolder mb-4">FAFSA for Graduate Students</h2>
+                        <p class="lead mb-3 mb-lg-5">Find out the prerequisite, application process and how graduate school financial aid works.</p>
+                    </div>
+
+                    <div class="col-12 col-lg-6 mt-0 ml-lg-auto">
+                        <img loading="lazy" class="rounded" th:src="@{/assets/img/pages/fafsa.jpg}" alt="Fafsa">
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        @@include('./_footer.html', {
+            "path": "..",
+            "classes": "bg-primary text-white"
+        })
+
+    </main>
+
+    @@include('./_scripts.html', {
+        "path": ".."
+    })
+    
+</body>
+
+</html>
