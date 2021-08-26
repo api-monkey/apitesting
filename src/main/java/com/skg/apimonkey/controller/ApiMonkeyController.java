@@ -10,8 +10,8 @@ public class ApiMonkeyController {
     @GetMapping("/")
     public String homePage(Model model) {
 
-        model.addAttribute("title", "Api Monkey");
-        model.addAttribute("description", "An all-in-one test automation solution");
+        model.addAttribute("title", "APIMonkey");
+        model.addAttribute("description", "The No-code API testing solution");
         model.addAttribute("robots", "index");
 
         return "index";
