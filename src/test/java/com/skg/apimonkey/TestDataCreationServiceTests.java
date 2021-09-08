@@ -1,5 +1,8 @@
 package com.skg.apimonkey;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.service.SwaggerParserService;
 import com.skg.apimonkey.service.DataCreationService;
@@ -26,29 +29,35 @@ class TestDataCreationServiceTests {
 
 	@Test
 	@Ignore
-	void testGetSwaggerRestApi() {
+	void testGetSwaggerRestApi() throws JsonProcessingException {
 
 		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/#/pet/addPet");
 
+		log.info(new ObjectMapper().writeValueAsString(result));
 		Assert.assertNotNull(result);
 	}
 
 	@Test
 	@Ignore
-	void testGenerateTestDataForSwagger() {
+	void testGenerateTestDataForSwagger() throws JsonProcessingException {
 
 		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/#/pet/addPet");
 		List<TestDataCase> cases = dataCreationService.generateTestDataCases(result);
 
-		cases.forEach(i -> {
-			log.info("Method: {}, path: {}", i.getRequestType().name(), i.getMethodName());
-			if (Objects.nonNull(i.getRequestParams())) {
-				log.info("Request params: {}", i.getRequestParams());
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
+		for (TestDataCase dataCase: cases) {
+			log.info("Method: {}, path: {}", dataCase.getRequestType().name(), dataCase.getMethodName());
+			if (Objects.nonNull(dataCase.getRequestParams())) {
+				log.info("Request params: {}", dataCase.getRequestParams());
 			}
-			if (Objects.nonNull(i.getRequestBody())) {
-				log.info("Request body: {}", i.getRequestBody());
+			if (Objects.nonNull(dataCase.getRequestBody())) {
+				log.info("Request body:{}{}", System.lineSeparator(), objectMapper.writeValueAsString(dataCase.getRequestBody()));
+			} else {
+				log.info("Request body: empty");
 			}
-		});
+		}
 
 		Assert.assertNotNull(result);
 	}
