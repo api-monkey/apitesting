@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @Autowired
-    SwaggerParserService parserService;
+    private SwaggerParserService parserService;
 
     @GetMapping("/test")
     public Object home(@RequestParam String param) {
