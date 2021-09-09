@@ -29,6 +29,9 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
         // split by request type
         List<TestDataCase> dataCaseList = splitByRequestType(swaggerConfig.getOpenAPI().getPaths());
 
+        //todo remove it
+        dataCaseList = Arrays.asList(dataCaseList.get(1));
+
         // generate data
         dataCaseList.forEach(i -> {
             updateWithTestCases(i, swaggerConfig.getOpenAPI());

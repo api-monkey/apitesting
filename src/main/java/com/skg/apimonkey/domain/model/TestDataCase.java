@@ -4,6 +4,8 @@ import io.swagger.v3.oas.models.PathItem;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class TestDataCase {
@@ -11,6 +13,6 @@ public class TestDataCase {
     private PathItem pathItem;
     private String methodName;
     private boolean isBroken;
-    private Object requestBody;
+    private List<Object> requestBodyVariants;
     private String requestParams;
 }

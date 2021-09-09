@@ -8,6 +8,7 @@ import com.skg.apimonkey.service.SwaggerParserService;
 import com.skg.apimonkey.service.DataCreationService;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class TestDataCreationServiceTests {
 	@Ignore
 	void testGenerateTestDataForSwagger() throws JsonProcessingException {
 
-		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/#/pet/addPet");
+		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore3.swagger.io/");
 		List<TestDataCase> cases = dataCreationService.generateTestDataCases(result);
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -52,8 +53,10 @@ class TestDataCreationServiceTests {
 			if (Objects.nonNull(dataCase.getRequestParams())) {
 				log.info("Request params: {}", dataCase.getRequestParams());
 			}
-			if (Objects.nonNull(dataCase.getRequestBody())) {
-				log.info("Request body:{}{}", System.lineSeparator(), objectMapper.writeValueAsString(dataCase.getRequestBody()));
+			if (CollectionUtils.isNotEmpty(dataCase.getRequestBodyVariants())) {
+				for (int i = 0; i < dataCase.getRequestBodyVariants().size(); i++) {
+					log.info("Request body variant {}:{}{}", i + 1, System.lineSeparator(), objectMapper.writeValueAsString(dataCase.getRequestBodyVariants().get(i)));
+				}
 			} else {
 				log.info("Request body: empty");
 			}
