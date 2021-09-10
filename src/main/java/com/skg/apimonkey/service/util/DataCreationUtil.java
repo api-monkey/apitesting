@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,7 +30,10 @@ public class DataCreationUtil {
     private final static String DATE = "date";
     private final static String DATETIME = "date-time";
 
-    private final static List<String> STRING_TYPE_VALUES = Arrays.asList("test", "", "null", "88888", "random test value");
+    private final static List<String> STRING_TYPE_VALUES = Arrays.asList("test", "", "null", "88888", "random test value", "long stringggggggggggggggggggggggggggggggggggggggggggggg", "string");
+    private final static List<String> EMAIL_TYPE_VALUES = Arrays.asList("test@test.com", "valid.12345.email@test.com", "invalid.email@@@id.test", "null", "", "email.test@gmail.test");
+    private final static List<String> INTEGER_TYPE_VALUES = Arrays.asList("null", "A-random-string", "-1", "99", "888888888888", "7547", "0", "102");
+    private final static List<String> NUMBER_TYPE_VALUES = Arrays.asList("0.235", "3.1415926", "-1.36", "99.4565", "00.9999999", "null", "", "102");
 
     public static void generatePostBody(TestDataCase dataCase, OpenAPI openApi) {
         generatePostBody(dataCase, openApi, 5);
@@ -61,7 +66,18 @@ public class DataCreationUtil {
 
         List<Object> resultList = new ArrayList<>();
         for (int i = 0; i < variants; i++) {
-            Object bodyItem = buildBodyFromSchema(schema, companents, i);
+
+            Object bodyItem;
+            if (schema instanceof ArraySchema) {
+                List<Object> arrayList = new ArrayList<>();
+                Schema inArraySchema = ((ArraySchema) schema).getItems();
+                arrayList.add(isObject(inArraySchema) ? buildBodyFromSchema(inArraySchema, companents, i) : buildBodyFromSchema(schema, companents, i));
+                bodyItem = arrayList;
+
+            } else {
+                bodyItem = buildBodyFromSchema(schema, companents, i);
+            }
+
             if(Objects.nonNull(bodyItem)) {
                 resultList.add(bodyItem);
             }
@@ -120,27 +136,27 @@ public class DataCreationUtil {
         Object result;
         switch (schema.getType()) {
             case INTEGER:
-                result = Objects.isNull(schema.getExample()) ? 0 : schema.getExample();
+                result = getIntegerVariant(schema, variantNumber);
                 break;
             case STRING:
                 if (StringUtils.equalsIgnoreCase(schema.getFormat(), EMAIL)) {
-                    result = Objects.isNull(schema.getExample()) ? "test@gmail.com" : schema.getExample();
+                    result = getEmailVariant(schema, variantNumber);
 
                 } else if(StringUtils.equalsIgnoreCase(schema.getFormat(), DATETIME)) {
-                    result = Objects.isNull(schema.getExample()) ? "2024-09-08T14:00:41.246Z" : schema.getExample();
+                    result = getDateTimeVariant(schema, variantNumber, DATETIME);
 
                 } else if(StringUtils.equalsIgnoreCase(schema.getFormat(), DATE)) {
-                    result = Objects.isNull(schema.getExample()) ? "2024-09-08" : schema.getExample();
+                    result = getDateTimeVariant(schema, variantNumber, DATE);
 
                 } else {
-                result = getStringVariant((StringSchema) schema, variantNumber);
-            }
+                    result = getStringVariant((StringSchema) schema, variantNumber);
+                }
                 break;
             case NUMBER:
-                result = Objects.isNull(schema.getExample()) ? "0.0" : schema.getExample();
+                result = getNumberVariant(schema, variantNumber);
                 break;
             case BOOLEAN:
-                result = Objects.isNull(schema.getExample()) ? "false" : schema.getExample();
+                result = getBooleanVariant(schema, variantNumber);
                 break;
             default:
                 log.warn("Unrecognized type: {} !", schema.getType());
@@ -162,6 +178,85 @@ public class DataCreationUtil {
                     String.valueOf(schema.getExample());
         }
         return STRING_TYPE_VALUES.get(ThreadLocalRandom.current().nextInt(STRING_TYPE_VALUES.size()));
+    }
+
+    private static String getNumberVariant(Schema schema, int variantNumber) {
+
+        if (CollectionUtils.isNotEmpty(schema.getEnum())) {
+            return String.valueOf(schema.getEnum().get(ThreadLocalRandom.current().nextInt(schema.getEnum().size())));
+        }
+
+        if (variantNumber == 0) {
+            return Objects.isNull(schema.getExample()) ?
+                    "0.0" :
+                    String.valueOf(schema.getExample());
+        }
+        return NUMBER_TYPE_VALUES.get(ThreadLocalRandom.current().nextInt(NUMBER_TYPE_VALUES.size()));
+    }
+
+    private static String getIntegerVariant(Schema schema, int variantNumber) {
+
+        if (CollectionUtils.isNotEmpty(schema.getEnum())) {
+            return String.valueOf(schema.getEnum().get(ThreadLocalRandom.current().nextInt(schema.getEnum().size())));
+        }
+
+        if (variantNumber == 0) {
+            return Objects.isNull(schema.getExample()) ?
+                    "0" :
+                    String.valueOf(schema.getExample());
+        }
+        return INTEGER_TYPE_VALUES.get(ThreadLocalRandom.current().nextInt(INTEGER_TYPE_VALUES.size()));
+    }
+
+    private static String getEmailVariant(Schema schema, int variantNumber) {
+
+        if (CollectionUtils.isNotEmpty(schema.getEnum())) {
+            return String.valueOf(schema.getEnum().get(ThreadLocalRandom.current().nextInt(schema.getEnum().size())));
+        }
+
+        if (variantNumber == 0) {
+            return Objects.isNull(schema.getExample()) ?
+                    EMAIL_TYPE_VALUES.get(ThreadLocalRandom.current().nextInt(EMAIL_TYPE_VALUES.size())) :
+                    String.valueOf(schema.getExample());
+        }
+        return EMAIL_TYPE_VALUES.get(ThreadLocalRandom.current().nextInt(EMAIL_TYPE_VALUES.size()));
+    }
+
+    private static String getDateTimeVariant(Schema schema, int variantNumber, String dateType) {
+
+        String pattern = StringUtils.equalsIgnoreCase(dateType, DATE) ? "yyyy-MM-dd" : "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+        if (CollectionUtils.isNotEmpty(schema.getEnum())) {
+            return String.valueOf(schema.getEnum().get(ThreadLocalRandom.current().nextInt(schema.getEnum().size())));
+        }
+        Date date = new Date();
+        date = DateUtils.addYears(date, ThreadLocalRandom.current().nextInt(10));
+        date = DateUtils.addMonths(date, ThreadLocalRandom.current().nextInt(12));
+        date = DateUtils.addDays(date, ThreadLocalRandom.current().nextInt(28));
+        date = DateUtils.addHours(date, ThreadLocalRandom.current().nextInt(24));
+        date = DateUtils.addMinutes(date, ThreadLocalRandom.current().nextInt(60));
+        date = DateUtils.addSeconds(date, ThreadLocalRandom.current().nextInt(60));
+
+        if (variantNumber == 0) {
+            return Objects.isNull(schema.getExample()) ?
+                    DateFormatUtils.format(date, pattern) :
+                    String.valueOf(schema.getExample());
+        }
+        return DateFormatUtils.format(date, pattern);
+    }
+
+    private static String getBooleanVariant(Schema schema, int variantNumber) {
+
+        if (CollectionUtils.isNotEmpty(schema.getEnum())) {
+            return String.valueOf(schema.getEnum().get(ThreadLocalRandom.current().nextInt(schema.getEnum().size())));
+        }
+
+        if (variantNumber == 0) {
+            return Objects.isNull(schema.getExample()) ?
+                    String.valueOf(ThreadLocalRandom.current().nextBoolean()) :
+                    String.valueOf(schema.getExample());
+        }
+        return String.valueOf(ThreadLocalRandom.current().nextBoolean());
     }
 
     private static boolean isObject(Schema schema) {

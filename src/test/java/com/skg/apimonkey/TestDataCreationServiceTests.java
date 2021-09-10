@@ -42,7 +42,7 @@ class TestDataCreationServiceTests {
 	@Ignore
 	void testGenerateTestDataForSwagger() throws JsonProcessingException {
 
-		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore3.swagger.io/");
+		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/v2/swagger.json");
 		List<TestDataCase> cases = dataCreationService.generateTestDataCases(result);
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -55,13 +55,12 @@ class TestDataCreationServiceTests {
 			}
 			if (CollectionUtils.isNotEmpty(dataCase.getRequestBodyVariants())) {
 				for (int i = 0; i < dataCase.getRequestBodyVariants().size(); i++) {
-					log.info("Request body variant {}:{}{}", i + 1, System.lineSeparator(), objectMapper.writeValueAsString(dataCase.getRequestBodyVariants().get(i)));
+					log.info("Request body variant [{}, {}] {}:{}{}", dataCase.getRequestType().name(), dataCase.getMethodName(), i + 1, System.lineSeparator(), objectMapper.writeValueAsString(dataCase.getRequestBodyVariants().get(i)));
 				}
 			} else {
 				log.info("Request body: empty");
 			}
 		}
-
 		Assert.assertNotNull(result);
 	}
 
