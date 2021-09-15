@@ -15,6 +15,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -47,6 +48,8 @@ public class DataCreationUtil {
         RequestBody requestBody = pathItem.getPost().getRequestBody();
         if (Objects.isNull(requestBody)) {
             log.warn("RequestBody empty for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
+            dataCase.setErrorMessage(String.format("RequestBody empty for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
+            dataCase.setBroken(true);
             return;
         }
 
@@ -54,8 +57,20 @@ public class DataCreationUtil {
 
         if(Objects.isNull(mediaType)) {
             log.warn("MediaType not found for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
+            dataCase.setErrorMessage(String.format("MediaType not found for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
+            dataCase.setBroken(true);
             return;
         }
+
+        if(CollectionUtils.isEmpty(openApi.getServers())) {
+            log.warn("Server url not found");
+            dataCase.setErrorMessage("Server url not found");
+            dataCase.setBroken(true);
+            return;
+        }
+
+        dataCase.setContentType(MEDIA_TYPE);
+        dataCase.setServerApiPathes(openApi.getServers().stream().map(i -> i.getUrl()).collect(Collectors.toList()));
 
         //create request body
         List<Object> bodyObjectVariants = buildBodyVariantsFromSchema(mediaType.getSchema(), openApi.getComponents(), variantNumber);
