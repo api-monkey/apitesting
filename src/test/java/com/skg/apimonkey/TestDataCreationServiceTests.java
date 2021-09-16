@@ -3,6 +3,7 @@ package com.skg.apimonkey;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.skg.apimonkey.domain.model.ParametersDataCase;
 import com.skg.apimonkey.domain.model.RequestType;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.service.SwaggerParserService;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @Slf4j
@@ -56,15 +58,37 @@ class TestDataCreationServiceTests {
 
 		for (TestDataCase dataCase: cases) {
 			log.info("Method: {}, path: {}", dataCase.getRequestType().name(), dataCase.getMethodName());
-			if (Objects.nonNull(dataCase.getRequestParams())) {
-				log.info("Request params: {}", dataCase.getRequestParams());
+
+			if (Objects.nonNull(dataCase.getRequestParamsVariants())) {
+				for (int i = 0; i < dataCase.getRequestParamsVariants().size(); i++) {
+
+					ParametersDataCase parameterItem = dataCase.getRequestParamsVariants().get(i);
+					long pathParamsCount = parameterItem.isNoParams() ? 0 : parameterItem.getParameterItems().stream().filter(j -> !j.isInPath()).count();
+					boolean isNoParams = parameterItem.isNoParams() || pathParamsCount == 0;
+
+					log.info("Request param variant [{}, {}] {}:{}{}",
+							dataCase.getRequestType().name(),
+							objectMapper.writeValueAsString(parameterItem.getModifiedPath()),
+							i + 1,
+							System.lineSeparator(),
+							isNoParams ?
+									"<no params>" :
+									parameterItem.getParameterItems().stream()
+											.filter(j -> !j.isInPath())
+											.map(j -> String.format("%s = %s", j.getKey(), j.getValue()))
+											.collect(Collectors.joining(System.lineSeparator()))
+					);
+				}
 			}
 			if (CollectionUtils.isNotEmpty(dataCase.getRequestBodyVariants())) {
 				for (int i = 0; i < dataCase.getRequestBodyVariants().size(); i++) {
-					log.info("Request body variant [{}, {}] {}:{}{}", dataCase.getRequestType().name(), dataCase.getMethodName(), i + 1, System.lineSeparator(), objectMapper.writeValueAsString(dataCase.getRequestBodyVariants().get(i)));
+					log.info("Request body variant [{}, {}] {}:{}{}",
+							dataCase.getRequestType().name(),
+							dataCase.getMethodName(),
+							i + 1,
+							System.lineSeparator(),
+							objectMapper.writeValueAsString(dataCase.getRequestBodyVariants().get(i)));
 				}
-			} else {
-				log.info("Request body: empty");
 			}
 		}
 		Assert.assertNotNull(result);

@@ -19,5 +19,5 @@ public class TestDataCase {
     private String errorMessage;
 
     private List<Object> requestBodyVariants;
-    private String requestParams;
+    private List<ParametersDataCase> requestParamsVariants;
 }

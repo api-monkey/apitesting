@@ -3,12 +3,14 @@ package com.skg.apimonkey.service.impl;
 import com.skg.apimonkey.domain.model.RequestType;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.service.DataCreationService;
-import com.skg.apimonkey.service.util.DataCreationUtil;
+import com.skg.apimonkey.service.util.DataCreationGetRequestUtil;
+import com.skg.apimonkey.service.util.DataCreationPostRequestUtil;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,11 +43,20 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
 
     private void updateWithTestCases(TestDataCase dataCase, OpenAPI openApi) {
 
+        if(CollectionUtils.isEmpty(openApi.getServers())) {
+            log.warn("Server url not found");
+            dataCase.setErrorMessage("Server url not found");
+            dataCase.setBroken(true);
+            return;
+        }
+
         switch (dataCase.getRequestType()) {
             case POST:
-                DataCreationUtil.generatePostBody(dataCase, openApi);
+                DataCreationPostRequestUtil.generatePostBody(dataCase, openApi);
                 break;
             case GET:
+                DataCreationGetRequestUtil.generateGetParameters(dataCase, openApi);
+                break;
             case PUT:
             case DELETE:
             case HEAD:
