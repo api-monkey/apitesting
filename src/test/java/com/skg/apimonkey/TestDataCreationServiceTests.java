@@ -23,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.skg.apimonkey.service.util.StringUtil.isJson;
+
 @SpringBootTest
 @Slf4j
 class TestDataCreationServiceTests {
@@ -134,4 +136,34 @@ class TestDataCreationServiceTests {
 		Assert.assertNotNull(response);
 	}
 
+    @Test
+    @Ignore
+    void testCaseRunnerManagerGet() throws JsonProcessingException {
+
+        SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/");
+        List<TestDataCase> cases = dataCreationService.generateTestDataCases(result).stream()
+                .filter(i -> i.getRequestType().equals(RequestType.GET))
+//                .limit(1)
+                .collect(Collectors.toList());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
+        for (TestDataCase dataCase: cases) {
+            Response response = caseRunnerManager.runDataCase(dataCase);
+
+            log.info("Response: {}", response.getStatusLine().toString());
+            log.info("Response body: ");
+            if (response.getBody() == null) {
+            	System.out.println("empty");
+
+			} else if (isJson(new String(response.getBody(), StandardCharsets.UTF_8))) {
+            	System.out.println(objectMapper.writeValueAsString(objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), Object.class)));
+
+			} else {
+            	System.out.println(new String(response.getBody(), StandardCharsets.UTF_8));
+			}
+        }
+        Assert.assertNotNull(result);
+    }
 }

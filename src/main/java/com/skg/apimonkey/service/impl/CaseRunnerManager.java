@@ -32,7 +32,7 @@ public class CaseRunnerManager {
                 return postCaseRunnerService.executeCase(dataCase);
 
             case GET:
-//                return postCaseRunnerService.executeCase(dataCase);
+                return getCaseRunnerService.executeCase(dataCase);
             case PUT:
             case DELETE:
             case HEAD:
