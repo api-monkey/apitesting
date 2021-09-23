@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    @@include('./_head.html', {
+        "path": "../.."
+    })
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/run_page.css}"/>
+</head>
+
+<body>
+
+    @@include('./_navigation.html', {
+        "path": "..",
+        "classes": "navbar-dark navbar-theme-primary"
+    })
+    @@include('./_preloader.html', {
+        "path": ".."
+    })
+
+    <main>
+
+        <section style="height: 106px" class="section-header p-0 bg-primary text-white">
+        </section>
+
+        <div class="mob-hide container mt-3">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap">
+                <div class="d-block mb-md-0">
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                            <li class="breadcrumb-item"><a th:href="@{/}"><span class="fas fa-home"></span></a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Get Started</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="mob-hide container text-center">
+            <h2 class="h2 text-primary">[[${title}]]</h2>
+        </div>
+
+        <div style="min-height: 600px" class="container mobile-padding mt-3 pb-5">
+
+
+            <div class="row">
+                <div class="col-12 col-lg-3">
+
+                </div>
+                <div class="col-12 col-lg-9">
+
+                </div>
+            </div>
+
+
+        </div>
+
+        @@include('./_footer_liner.html', {
+        "path": "..",
+        "classes": "bg-primary text-white"
+        })
+
+    </main>
+
+    @@include('./_scripts.html', {
+    "path": "../.."
+    })
+
+    <script type="text/javascript" th:src="@{/assets/js/run_page.js}"></script>
+    
+</body>
+
+</html>
