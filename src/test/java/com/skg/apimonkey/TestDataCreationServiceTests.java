@@ -53,7 +53,7 @@ class TestDataCreationServiceTests {
 	void testGenerateTestDataForSwagger() throws JsonProcessingException {
 
 		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/v2/swagger.json");
-		List<TestDataCase> cases = dataCreationService.generateTestDataCases(result);
+		List<TestDataCase> cases = dataCreationService.generateTestDataCases(result, 3);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
@@ -141,7 +141,7 @@ class TestDataCreationServiceTests {
     void testCaseRunnerManagerGet() throws JsonProcessingException {
 
         SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/");
-        List<TestDataCase> cases = dataCreationService.generateTestDataCases(result).stream()
+        List<TestDataCase> cases = dataCreationService.generateTestDataCases(result, 2).stream()
                 .filter(i -> i.getRequestType().equals(RequestType.GET))
 //                .limit(1)
                 .collect(Collectors.toList());

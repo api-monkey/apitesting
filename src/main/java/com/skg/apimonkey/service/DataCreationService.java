@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DataCreationService {
 
-    List<TestDataCase> generateTestDataCases(SwaggerParseResult swaggerConfig);
+    List<TestDataCase> generateTestDataCases(SwaggerParseResult swaggerConfig, Integer variantNumber);
 }

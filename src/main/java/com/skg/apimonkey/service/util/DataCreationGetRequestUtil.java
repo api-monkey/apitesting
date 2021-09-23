@@ -22,8 +22,8 @@ public class DataCreationGetRequestUtil {
     //supported media type
     private final static String MEDIA_TYPE = "application/json";
 
-    public static void generateGetParameters(TestDataCase dataCase, OpenAPI openApi) {
-        generateParameters(dataCase, openApi, 1);
+    public static void generateGetParameters(TestDataCase dataCase, OpenAPI openApi, Integer variantNumber) {
+        generateParameters(dataCase, openApi, variantNumber);
     }
 
     public static void generateParameters(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {

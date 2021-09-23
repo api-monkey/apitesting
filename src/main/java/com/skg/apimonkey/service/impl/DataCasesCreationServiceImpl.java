@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class DataCasesCreationServiceImpl implements DataCreationService {
 
     @Override
-    public List<TestDataCase> generateTestDataCases(SwaggerParseResult swaggerConfig) {
+    public List<TestDataCase> generateTestDataCases(SwaggerParseResult swaggerConfig, Integer variantNumber) {
 
         if (Objects.isNull(swaggerConfig) || Objects.isNull(swaggerConfig.getOpenAPI()) || Objects.isNull(swaggerConfig.getOpenAPI().getPaths())) {
             log.warn("Swagger config is broken. Test data generation skipped");
@@ -33,7 +33,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
 
         // generate data
         dataCaseList.forEach(i -> {
-            updateWithTestCases(i, swaggerConfig.getOpenAPI());
+            updateWithTestCases(i, swaggerConfig.getOpenAPI(), variantNumber);
         });
 
         return dataCaseList.stream()
@@ -41,7 +41,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
                 .collect(Collectors.toList());
     }
 
-    private void updateWithTestCases(TestDataCase dataCase, OpenAPI openApi) {
+    private void updateWithTestCases(TestDataCase dataCase, OpenAPI openApi, Integer variantNumber) {
 
         if(CollectionUtils.isEmpty(openApi.getServers())) {
             log.warn("Server url not found");
@@ -52,10 +52,10 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
 
         switch (dataCase.getRequestType()) {
             case POST:
-                DataCreationPostRequestUtil.generatePostBody(dataCase, openApi);
+                DataCreationPostRequestUtil.generatePostBody(dataCase, openApi, variantNumber);
                 break;
             case GET:
-                DataCreationGetRequestUtil.generateGetParameters(dataCase, openApi);
+                DataCreationGetRequestUtil.generateGetParameters(dataCase, openApi, variantNumber);
                 break;
             case PUT:
             case DELETE:

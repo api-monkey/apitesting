@@ -21,8 +21,8 @@ public class DataCreationPostRequestUtil {
     //supported media type
     private final static String MEDIA_TYPE = "application/json";
 
-    public static void generatePostBody(TestDataCase dataCase, OpenAPI openApi) {
-        generateBody(dataCase, openApi, 3);
+    public static void generatePostBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
+        generateBody(dataCase, openApi, variantNumber);
     }
 
     public static void generateBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
