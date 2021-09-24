@@ -1,16 +1,21 @@
 package com.skg.apimonkey.controller;
 
 import com.skg.apimonkey.domain.model.TestDataCase;
+import com.skg.apimonkey.domain.model.response.InputUrlResponse;
 import com.skg.apimonkey.service.DataCreationService;
 import com.skg.apimonkey.service.SwaggerParserService;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @RestController
 public class WorkerController {
 
@@ -28,11 +33,37 @@ public class WorkerController {
     }
 
     @GetMapping("/rest/parseSwaggerUrl")
-    public Object parseSwaggerUrl(@RequestParam(value = "url") String url,
-                                  @RequestParam(value = "limit", required = false, defaultValue = "1") Integer variantNumber) {
+    public InputUrlResponse parseSwaggerUrl(@RequestParam(value = "url") String url,
+                                            @RequestParam(value = "variantNumber", required = false, defaultValue = "1") Integer variantNumber) {
 
-        SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/v2/swagger.json");
-        List<TestDataCase> cases = dataCreationService.generateTestDataCases(result, variantNumber);
-        return cases;
+        SwaggerParseResult result = null;
+        List<TestDataCase> cases = null;
+        String errorMessage = null;
+
+        try {
+            result = parserService.getSwaggerRestApi(url);
+
+        } catch (Exception e) {
+            log.error("getSwaggerRestApi error: ", e);
+            errorMessage = "Error processing swagger URL. Please pass the correct URL.";
+        }
+
+        if (Objects.nonNull(result) && Objects.nonNull(result.getOpenAPI())) {
+
+            try {
+                cases = dataCreationService.generateTestDataCases(result, variantNumber);
+
+            } catch (Exception e) {
+                log.error("generateTestDataCases error: ", e);
+                errorMessage = "Error creating test cases from swagger specification. Current URL is not supported.";
+            }
+        }
+
+        return InputUrlResponse.builder()
+                .passedUrl(url)
+                .errorMessage(errorMessage)
+                .isSuccess(CollectionUtils.isNotEmpty(cases))
+                .cases(cases)
+                .build();
     }
 }
