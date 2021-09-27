@@ -5,6 +5,7 @@ import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.service.DataCreationService;
 import com.skg.apimonkey.service.util.DataCreationGetRequestUtil;
 import com.skg.apimonkey.service.util.DataCreationPostRequestUtil;
+import com.skg.apimonkey.service.util.StringUtil;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
@@ -92,6 +93,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
 
     private TestDataCase createDataCase(String pathName, RequestType requestType, PathItem pathItem) {
         return TestDataCase.builder()
+                .dataId(StringUtil.generateDataId(requestType, pathName))
                 .methodName(pathName)
                 .requestType(requestType)
                 .pathItem(pathItem)

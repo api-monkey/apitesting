@@ -34,6 +34,7 @@ public class DataCreationGetRequestUtil {
         List<Parameter> parameters = pathItem.getGet().getParameters();
 
         dataCase.setContentType(MEDIA_TYPE);
+        dataCase.setSummary(StringUtils.isEmpty(pathItem.getGet().getSummary()) ? pathItem.getGet().getDescription() : pathItem.getGet().getSummary());
         dataCase.setServerApiPathes(openApi.getServers().stream().map(Server::getUrl).collect(Collectors.toList()));
 
         //create request params

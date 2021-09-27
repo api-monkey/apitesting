@@ -45,7 +45,7 @@ public class WorkerController {
 
         } catch (Exception e) {
             log.error("getSwaggerRestApi error: ", e);
-            errorMessage = "Error processing swagger URL. Please pass the correct URL.";
+            errorMessage = "Sorry we only support the REST API’s which have Swagger / Open APi definitions.";
         }
 
         if (Objects.nonNull(result) && Objects.nonNull(result.getOpenAPI())) {

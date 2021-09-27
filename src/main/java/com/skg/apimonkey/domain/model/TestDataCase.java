@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 @Builder
 public class TestDataCase {
+    private String dataId;
+    private String summary;
     private RequestType requestType;
     private PathItem pathItem;
     private String methodName;

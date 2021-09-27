@@ -32,6 +32,10 @@ public class DataCreationPostRequestUtil {
 
         RequestBody requestBody = pathItem.getPost().getRequestBody();
 
+        dataCase.setContentType(MEDIA_TYPE);
+        dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
+        dataCase.setServerApiPathes(openApi.getServers().stream().map(Server::getUrl).collect(Collectors.toList()));
+
         if ( Objects.isNull(requestBody) ) {
             log.warn("RequestBody empty for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
             dataCase.setErrorMessage(String.format("RequestBody empty for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
@@ -46,9 +50,6 @@ public class DataCreationPostRequestUtil {
             dataCase.setBroken(true);
             return;
         }
-
-        dataCase.setContentType(MEDIA_TYPE);
-        dataCase.setServerApiPathes(openApi.getServers().stream().map(Server::getUrl).collect(Collectors.toList()));
 
         //create request body
         List<Object> bodyObjectVariants = buildBodyVariantsFromSchema(mediaType.getSchema(), openApi.getComponents(), variantNumber);
