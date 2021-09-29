@@ -5,6 +5,7 @@ $(document).ready(function () {
     $('#swagger-url-submit-button').on('click', function() {
 
         let urlValue = $('#swagger-url-id').val();
+        let variantNumber = 4;
 
         if(!urlValue) {
             showInvalidFeedback();
@@ -19,7 +20,7 @@ $(document).ready(function () {
                 type: 'get',
                 data: {
                     url: urlValue,
-                    variantNumber: 1
+                    variantNumber: variantNumber
                 },
                 success: function (data) {
 
@@ -33,7 +34,7 @@ $(document).ready(function () {
 
                         console.log(data.cases);
                         // do something with data
-                        showDataBlockList(data);
+                        showDataBlockList(data, variantNumber);
 
                     } else {
 
@@ -54,26 +55,63 @@ $(document).ready(function () {
     });
 });
 
-function showDataBlockList(data) {
+function showDataBlockList(data, variantNumber) {
 
     let cases = data.cases,
-        wrapperCases = $('#wrapper-cases');
+        wrapperCases = $('#wrapper-cases'),
+        varNumber = variantNumber ? variantNumber : 1;
 
     $.each(cases, function( index, item ) {
 
+        let bodyItems= '',
+            runButton= '<button type="button" class="run-button btn btn-default width-220 m-2">Run</button>',
+            bodyItemsArray = [];
+
+        if(item.requestType == 'POST' && item.requestBodyVariants && item.requestBodyVariants.length > 0) {
+            $.each(item.requestBodyVariants, function( bodyIndex, bodyItem ) {
+                bodyItemsArray.push(bodyItem);
+            });
+        }
+
+        if(item.requestType == 'GET' && item.requestParamsVariants && item.requestParamsVariants.length > 0) {
+            $.each(item.requestParamsVariants, function( bodyIndex, bodyItem ) {
+                if(bodyItem.parameterItems && bodyItem.parameterItems.length > 0) {
+                    bodyItemsArray.push(bodyItem.parameterItems);
+                }
+            });
+        }
+
+        if(bodyItemsArray && bodyItemsArray.length > 0) {
+
+            bodyItems = '<div class="row row-grid font-weight-bolder m-0 p-0 w-100">';
+            $.each(bodyItemsArray, function( bodyIndex, bodyItem ) {
+
+                bodyItems +=
+                    '<div class="p-0 col-12 col-md-' + (12/varNumber) + '">' +
+                    '   <textarea type="text" class="form-control fill-available mx-2" rows="5" name="content" id="' + item.dataId + '-' + bodyIndex + '">' + JSON.stringify(bodyItem, null, 4) + '</textarea>' +
+                    '</div>';
+            });
+            bodyItems += '</div>';
+        }
+
+
         let dataItem = '<div id=' + item.dataId + '>\n' +
-            '    <div class="opblock-summary">\n' +
-            '        <div class="row row-grid align-items-center">\n' +
-            '            <div class="col-12 col-lg-3">\n' +
+            '    <div class="opblock-summary border border-default rounded mt-2">\n' +
+            '        <div class="row row-grid align-items-center font-weight-bolder m-2">\n' +
+            '            <div class="col-12 col-md-3">\n' +
             '                <h3><span class="badge ' + item.requestType.toLowerCase() + '-color">' + item.requestType + '</span></h3>\n' +
             '            </div>\n' +
-            '            <div class="col-12 col-lg-4">\n' +
-            '                <p>' + item.methodName + '</p>\n' +
+            '            <div class="col-12 col-md-4">\n' +
+            '                <span>' + item.methodName + '</span>\n' +
             '            </div>\n' +
-            '            <div class="col-12 col-lg-5">\n' +
-            '                <p>' + item.summary + '</p>\n' +
+            '            <div class="col-12 col-md-5">\n' +
+            '                <span>' + item.summary + '</span>\n' +
             '            </div>\n' +
             '        </div>\n' +
+
+                    bodyItems +
+                    runButton +
+
             '    </div>\n' +
             '</div>';
 

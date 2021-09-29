@@ -39,7 +39,7 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
 
             for (ParameterItem item : getParamsObj.getParameterItems()) {
                 if (!item.isInPath()) {
-                    builder.setParameter(item.getKey(), item.getValue());
+                    builder.setParameter(item.getName(), item.getValue());
                 }
             }
         }

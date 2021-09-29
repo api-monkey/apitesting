@@ -65,7 +65,7 @@ public class DataCreationGetRequestUtil {
             for (Parameter param: parameters) {
 
                 ParameterItem parameterItem = new ParameterItem();
-                parameterItem.setKey(param.getName());
+                parameterItem.setName(param.getName());
 
                 //find value
                 Schema schema;

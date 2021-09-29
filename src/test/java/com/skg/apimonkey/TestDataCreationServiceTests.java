@@ -77,7 +77,7 @@ class TestDataCreationServiceTests {
 									"<no params>" :
 									parameterItem.getParameterItems().stream()
 											.filter(j -> !j.isInPath())
-											.map(j -> String.format("%s = %s", j.getKey(), j.getValue()))
+											.map(j -> String.format("%s = %s", j.getName(), j.getValue()))
 											.collect(Collectors.joining(System.lineSeparator()))
 					);
 				}
@@ -143,7 +143,7 @@ class TestDataCreationServiceTests {
         SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/");
         List<TestDataCase> cases = dataCreationService.generateTestDataCases(result, 2).stream()
                 .filter(i -> i.getRequestType().equals(RequestType.GET))
-//                .limit(1)
+                .limit(2)
                 .collect(Collectors.toList());
 
         ObjectMapper objectMapper = new ObjectMapper();
