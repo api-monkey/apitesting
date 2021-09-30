@@ -28,7 +28,7 @@ public class DataCreationGetRequestUtil {
 
     public static void generateParameters(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
 
-        log.info("generate body for GET [{}]", dataCase.getMethodName());
+//        log.info("generate body for GET [{}]", dataCase.getMethodName());
         PathItem pathItem = dataCase.getPathItem();
 
         List<Parameter> parameters = pathItem.getGet().getParameters();

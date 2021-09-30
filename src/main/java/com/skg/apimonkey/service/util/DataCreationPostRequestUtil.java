@@ -27,7 +27,7 @@ public class DataCreationPostRequestUtil {
 
     public static void generateBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
 
-        log.info("generate body for POST [{}]", dataCase.getMethodName());
+//        log.info("generate body for POST [{}]", dataCase.getMethodName());
         PathItem pathItem = dataCase.getPathItem();
 
         RequestBody requestBody = pathItem.getPost().getRequestBody();
