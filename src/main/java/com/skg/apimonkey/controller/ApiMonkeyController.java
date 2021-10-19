@@ -1,14 +1,28 @@
 package com.skg.apimonkey.controller;
 
+import com.skg.apimonkey.domain.model.TestDataCase;
+import com.skg.apimonkey.service.DataCreationService;
+import com.skg.apimonkey.service.SwaggerParserService;
+import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Controller
 public class ApiMonkeyController {
+
+    @Autowired
+    private SwaggerParserService parserService;
+    @Autowired
+    private DataCreationService dataCreationService;
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -21,7 +35,7 @@ public class ApiMonkeyController {
     }
 
     @GetMapping("/get-started")
-    public String scholarshipSearch(Model model,
+    public String getStartedPage(Model model,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
 
@@ -29,6 +43,37 @@ public class ApiMonkeyController {
         model.addAttribute("description", "Get started with testing your API's");
         model.addAttribute("robots", "noindex");
 
-        return "run_page";
+        return "get_started_page";
+    }
+
+    @GetMapping("/run-tests")
+    public String runTestsPage(Model model,
+                               HttpServletRequest request,
+                               HttpServletResponse response,
+                               @RequestParam(value = "api", required = false) String hashId) {
+
+        List<TestDataCase> cases = null;
+        String errorMessage = null;
+
+        SwaggerParseResult result = parserService.getSwaggerData(hashId);
+
+        if (Objects.nonNull(result) && Objects.nonNull(result.getOpenAPI())) {
+
+            try {
+                cases = dataCreationService.generateTestDataCases(result, 4);
+
+            } catch (Exception e) {
+                log.error("generateTestDataCases error: ", e);
+                errorMessage = "Error creating test cases from swagger specification. Current URL is not supported.";
+            }
+        }
+
+        model.addAttribute("data", cases);
+        model.addAttribute("errorMessage", errorMessage);
+        model.addAttribute("title", "Run API's tests");
+        model.addAttribute("description", "Run tests for API");
+        model.addAttribute("robots", "noindex");
+
+        return "run_tests_page";
     }
 }

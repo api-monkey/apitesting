@@ -42,9 +42,9 @@ class TestDataCreationServiceTests {
 	@Ignore
 	void testGetSwaggerRestApi() throws JsonProcessingException {
 
-		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/#/pet/addPet");
+		String result = parserService.getSwaggerDataHashId("https://petstore.swagger.io/#/pet/addPet");
 
-		log.info(new ObjectMapper().writeValueAsString(result));
+		log.info(result);
 		Assert.assertNotNull(result);
 	}
 
@@ -52,8 +52,9 @@ class TestDataCreationServiceTests {
 	@Ignore
 	void testGenerateTestDataForSwagger() throws JsonProcessingException {
 
-		SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/v2/swagger.json");
-		List<TestDataCase> cases = dataCreationService.generateTestDataCases(result, 3);
+		String hashId = parserService.getSwaggerDataHashId("https://petstore.swagger.io/v2/swagger.json");
+		SwaggerParseResult parseResult = parserService.getSwaggerData(hashId);
+		List<TestDataCase> cases = dataCreationService.generateTestDataCases(parseResult, 3);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
@@ -93,7 +94,7 @@ class TestDataCreationServiceTests {
 				}
 			}
 		}
-		Assert.assertNotNull(result);
+		Assert.assertNotNull(hashId);
 	}
 
 	@Test
@@ -140,8 +141,9 @@ class TestDataCreationServiceTests {
     @Ignore
     void testCaseRunnerManagerGet() throws JsonProcessingException {
 
-        SwaggerParseResult result = parserService.getSwaggerRestApi("https://petstore.swagger.io/");
-        List<TestDataCase> cases = dataCreationService.generateTestDataCases(result, 2).stream()
+		String hashId = parserService.getSwaggerDataHashId("https://petstore.swagger.io/");
+		SwaggerParseResult parseResult = parserService.getSwaggerData(hashId);
+        List<TestDataCase> cases = dataCreationService.generateTestDataCases(parseResult, 2).stream()
                 .filter(i -> i.getRequestType().equals(RequestType.GET))
                 .limit(2)
                 .collect(Collectors.toList());
@@ -164,6 +166,6 @@ class TestDataCreationServiceTests {
             	System.out.println(new String(response.getBody(), StandardCharsets.UTF_8));
 			}
         }
-        Assert.assertNotNull(result);
+        Assert.assertNotNull(hashId);
     }
 }
