@@ -1,8 +1,11 @@
 package com.skg.apimonkey.controller;
 
+import com.skg.apimonkey.domain.data.SwaggerData;
 import com.skg.apimonkey.domain.model.TestDataCase;
+import com.skg.apimonkey.repository.SwaggerDataRepository;
 import com.skg.apimonkey.service.DataCreationService;
 import com.skg.apimonkey.service.SwaggerParserService;
+import com.skg.apimonkey.service.util.WebUtil;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ public class ApiMonkeyController {
     private SwaggerParserService parserService;
     @Autowired
     private DataCreationService dataCreationService;
+    @Autowired
+    private SwaggerDataRepository swaggerDataRepository;
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -54,21 +59,30 @@ public class ApiMonkeyController {
 
         List<TestDataCase> cases = null;
         String errorMessage = null;
+        int variantNumber = 4;
 
-        SwaggerParseResult result = parserService.getSwaggerData(hashId);
+        SwaggerData swaggerData = swaggerDataRepository.findFirstByHashId(hashId);
+        SwaggerParseResult result = parserService.getSwaggerData(swaggerData);
 
         if (Objects.nonNull(result) && Objects.nonNull(result.getOpenAPI())) {
 
             try {
-                cases = dataCreationService.generateTestDataCases(result, 4);
+                cases = dataCreationService.generateTestDataCases(result, variantNumber);
 
             } catch (Exception e) {
                 log.error("generateTestDataCases error: ", e);
                 errorMessage = "Error creating test cases from swagger specification. Current URL is not supported.";
             }
+
+        } else {
+
+            return WebUtil.response404(response);
         }
 
-        model.addAttribute("data", cases);
+        model.addAttribute("variantNumber", variantNumber);
+        model.addAttribute("cases", cases);
+        model.addAttribute("passedUrl", swaggerData.getPassedUrl());
+
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("title", "Run API's tests");
         model.addAttribute("description", "Run tests for API");

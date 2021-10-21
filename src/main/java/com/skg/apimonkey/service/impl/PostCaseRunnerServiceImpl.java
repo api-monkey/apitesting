@@ -32,11 +32,11 @@ public class PostCaseRunnerServiceImpl implements CaseRunnerService {
         Object requestObj = dataCase.getRequestBodyVariants().get(0);
         String json = new ObjectMapper().writeValueAsString(requestObj);
 
-        log.info(String.format("--> POST request body: %s", json));
-
         HttpPost request = new HttpPost(dataCase.getServerApiPathes().get(0) + dataCase.getMethodName());
         request.addHeader("Content-Type", dataCase.getContentType());
 //        request.setHeader("Authorization", TOKEN);
+
+        log.info(String.format("--> %s request body: %s", request, json));
 
         StringEntity entity = new StringEntity(json, "UTF-8");
         entity.setContentEncoding("UTF-8");

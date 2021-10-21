@@ -61,6 +61,7 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
             boolean isExist = swaggerData != null;
             swaggerData = isExist ? swaggerData : new SwaggerData();
             swaggerData.setUrl(jsonUrl);
+            swaggerData.setPassedUrl(swaggerUrl);
             swaggerData.setHashId(new HmacUtils(HmacAlgorithms.HMAC_SHA_1, "api-monkey").hmacHex(jsonUrl + new Date()).substring(0, 16));
             swaggerData.setPageContent(htmlBody);
             swaggerData.setCreatedDate(isExist ? swaggerData.getCreatedDate() : new Date());
@@ -75,6 +76,11 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
     public SwaggerParseResult getSwaggerData(String hashId) {
 
         SwaggerData swaggerData = swaggerDataRepository.findFirstByHashId(hashId);
+        return getSwaggerData(swaggerData);
+    }
+
+    public SwaggerParseResult getSwaggerData(SwaggerData swaggerData) {
+
         SwaggerParseResult result = null;
 
         try {

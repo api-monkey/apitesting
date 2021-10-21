@@ -1,5 +1,4 @@
 ﻿const defaultMessage = 'Sorry we only support the REST API’s which have Swagger / Open APi definitions.';
-let runDataMap = {};
 
 $(document).ready(function () {
 

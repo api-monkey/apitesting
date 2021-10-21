@@ -14,6 +14,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +32,7 @@ public class WebUtil {
             int responseCode = response.getStatusLine().getStatusCode();
             HttpEntity entity = response.getEntity();
             result.setBody(EntityUtils.toByteArray(entity));
+            log.info("<-- {}", response);
             if (responseCode != HttpStatus.SC_OK) {
                 log.error(response.getStatusLine().toString());
                 log.info(new String(result.getBody(), StandardCharsets.UTF_8));
@@ -68,5 +70,10 @@ public class WebUtil {
         }
 
         return null;
+    }
+
+    public static String response404(HttpServletResponse response) {
+        response.setStatus(org.springframework.http.HttpStatus.NOT_FOUND.value()); // for HTTP response
+        return "error/404";
     }
 }

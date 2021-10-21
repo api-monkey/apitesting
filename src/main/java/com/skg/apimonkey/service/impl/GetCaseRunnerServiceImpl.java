@@ -29,7 +29,6 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
     public HttpUriRequest createGetRequest(TestDataCase dataCase) {
 
         ParametersDataCase getParamsObj = dataCase.getRequestParamsVariants().get(0);
-        log.info(String.format("--> GET request: %s", getParamsObj.getModifiedPath()));
 
         long pathParamsCount = getParamsObj.isNoParams() ? 0 : getParamsObj.getParameterItems().stream().filter(j -> !j.isInPath()).count();
         boolean isNoParams = getParamsObj.isNoParams() || pathParamsCount == 0;
@@ -45,6 +44,8 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
         }
 
         HttpGet request = new HttpGet(builder.build().toString());
+
+        log.info(String.format("--> %s request: %s", request, getParamsObj.getModifiedPath()));
 
         log.info(String.valueOf(request));
 

@@ -18,6 +18,9 @@ public class SwaggerData implements Serializable {
     @Column(name = "URL")
     private String url;
 
+    @Column(name = "PASSED_URL")
+    private String passedUrl;
+
     @Column(name = "HASH_ID")
     private String hashId;
 
