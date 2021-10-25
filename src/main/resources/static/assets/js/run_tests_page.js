@@ -1,4 +1,3 @@
-const defaultMessage = 'Sorry we only support the REST API’s which have Swagger / Open APi definitions.';
 let runDataMap = {};
 
 $(document).ready(function () {
@@ -8,14 +7,21 @@ $(document).ready(function () {
         runDataMap[item.dataId] = item;
     });
 
-    addRunButtonEvents();
+    addGenerateButtonEvents();
 
 });
 
-function addRunButtonEvents() {
-    $('.run-button').on('click', function() {
+function addRunButtonEvents(runButton) {
 
-        let runCases = $(this).parent('div').find('.run-case');
+    runButton.on('click', function() {
+
+        let count = 0;
+        loadingStart();
+        let parentDiv = $(this).parent('div'),
+            runCases = parentDiv.find('.run-case'),
+            respText = parentDiv.find('.response-text');
+        respText.fadeIn('fast');
+
         runCases.each(function() {
 
             let runItem = $(this),
@@ -38,7 +44,7 @@ function addRunButtonEvents() {
                 dataCase: dataToSend
             };
 
-            loadingStart();
+            count++;
 
             $.ajax({
                 url: '/rest/runCase',
@@ -64,12 +70,39 @@ function addRunButtonEvents() {
                     console.log(exception);
                 },
                 complete: function() {
-                    loadingStop();
+                    if(--count <= 0) {
+                        loadingStop();
+                        runButton.hide();
+                    }
                 },
                 // timeout: 20000
             });
 
         });
+    });
+}
+
+function addGenerateButtonEvents() {
+    $('.generate-button').on('click', function() {
+
+        loadingStart();
+        let button = $(this);
+
+        setTimeout(function(button) {
+            let parentDiv = button.parent('div'),
+                runCases = parentDiv.find('.test-cases');
+
+            button.remove();
+            parentDiv.append('<button type="button" class="btn btn-tertiary width-220 m-2 run-button">Run tests</button>');
+            runCases.fadeIn('fast');
+
+            let runButton = parentDiv.find('.run-button');
+
+            addRunButtonEvents(runButton);
+
+            loadingStop();
+
+        }, 1000, button);
     });
 }
 
@@ -81,6 +114,7 @@ function showResult(runItem, response) {
     }
     runItem.val('');
     runItem.val(response.responseBody);
+    runItem.attr("disabled", true);
 }
 
 function loadingStart() {
