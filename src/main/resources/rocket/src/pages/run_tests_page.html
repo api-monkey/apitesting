@@ -46,6 +46,26 @@
                 </div>
             </div>
 
+            <div>
+                <div class="row align-items-right mx-0 my-3">
+                    <button class="btn btn-tertiary width-220" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Authorize
+                    </button>
+                </div>
+                <div class="collapse" id="collapseExample">
+                    <div class="row row-grid align-items-center font-weight-bolder m-2">
+
+                        <div class="mt-2 col-md-12 form-group row">
+                            <label class="col-md-1 col-form-label" for="key-1">Key:</label>
+                            <input type="text" class="form-control col-md-4 mr-6" name="auth-key-1" id="key-1">
+                            <label class="col-md-1 col-form-label" for="value-1">Value:</label>
+                            <input type="text" class="form-control col-md-4" name="auth-value-1" id="value-1">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
             <div id="wrapper-cases" class="wrapper" >
 
                 <th:block th:if="${not #lists.isEmpty(cases)}" th:each="item,iter: ${cases}">
