@@ -1,5 +1,6 @@
 package com.skg.apimonkey.domain.model;
 
+import com.skg.apimonkey.domain.model.response.AuthHeader;
 import io.swagger.v3.oas.models.PathItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,9 @@ public class TestDataCase {
     private PathItem pathItem;
     private String methodName;
     private String contentType;
+    private int executeNumber;
     private List<String> serverApiPathes;
+    private List<AuthHeader> authHeaders;
 
     private boolean isBroken;
     private String errorMessage;

@@ -8,6 +8,7 @@ import com.skg.apimonkey.service.util.Response;
 import com.skg.apimonkey.service.util.WebUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
@@ -20,15 +21,14 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
     @Override
     public Response executeCase(TestDataCase dataCase) {
         HttpUriRequest getRequest = createGetRequest(dataCase);
-        Response response = WebUtil.executeRequest(getRequest);
 
-        return response;
+        return WebUtil.executeRequest(getRequest);
     }
 
     @SneakyThrows
     public HttpUriRequest createGetRequest(TestDataCase dataCase) {
 
-        ParametersDataCase getParamsObj = dataCase.getRequestParamsVariants().get(0);
+        ParametersDataCase getParamsObj = dataCase.getRequestParamsVariants().get(dataCase.getExecuteNumber());
 
         long pathParamsCount = getParamsObj.isNoParams() ? 0 : getParamsObj.getParameterItems().stream().filter(j -> !j.isInPath()).count();
         boolean isNoParams = getParamsObj.isNoParams() || pathParamsCount == 0;
@@ -51,6 +51,12 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
 
         request.addHeader("Accept", dataCase.getContentType());
         request.addHeader("Content-Type", dataCase.getContentType());
+
+        if(CollectionUtils.isNotEmpty(dataCase.getAuthHeaders())) {
+            dataCase.getAuthHeaders().forEach(i -> {
+                request.addHeader(i.getKey(), i.getValue());
+            });
+        }
 
         return request;
     }

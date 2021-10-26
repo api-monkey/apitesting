@@ -30,7 +30,7 @@ function addRunButtonEvents(runButton) {
                 caseNumber = parseInt(keyParts[1]),
                 dataToSend = runDataMap[caseDataId];
 
-            if(dataToSend.requestType == 'POST' && dataToSend.requestBodyVariants && dataToSend.requestBodyVariants[caseNumber]) {
+            if((dataToSend.requestType == 'POST' || dataToSend.requestType == 'PUT') && dataToSend.requestBodyVariants && dataToSend.requestBodyVariants[caseNumber]) {
                 dataToSend.requestBodyVariants[caseNumber] = JSON.parse(runItem.val());
             }
 
@@ -38,9 +38,22 @@ function addRunButtonEvents(runButton) {
                 // not implemented update params
             }
 
+            let authHeaders = [];
+            $('.auth-headers').each(function () {
+                let authKey = $(this).find('input[name="auth-key"]').val(),
+                    authVal = $(this).find('input[name="auth-value"]').val();
+                if(authKey && authVal) {
+                    authHeaders.push({
+                        key: authKey,
+                        value: authVal
+                    });
+                }
+            });
+            dataToSend.authHeaders = authHeaders;
+            dataToSend.executeNumber = caseNumber;
+
             let sendBody  = {
                 dataId: caseDataId,
-                number: caseNumber,
                 dataCase: dataToSend
             };
 

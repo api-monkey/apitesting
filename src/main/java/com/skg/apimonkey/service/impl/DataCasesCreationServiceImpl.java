@@ -59,6 +59,8 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
                 DataCreationGetRequestUtil.generateGetParameters(dataCase, openApi, variantNumber);
                 break;
             case PUT:
+                DataCreationPostRequestUtil.generatePutBody(dataCase, openApi, variantNumber);
+                break;
             case DELETE:
             case HEAD:
                 log.warn("Data generation for method {} not implemented yet!", dataCase.getRequestType().name());

@@ -7,6 +7,7 @@ import com.skg.apimonkey.service.util.Response;
 import com.skg.apimonkey.service.util.WebUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
@@ -29,11 +30,17 @@ public class PostCaseRunnerServiceImpl implements CaseRunnerService {
     @SneakyThrows
     public static HttpUriRequest createRequest(TestDataCase dataCase) {
 
-        Object requestObj = dataCase.getRequestBodyVariants().get(0);
+        Object requestObj = dataCase.getRequestBodyVariants().get(dataCase.getExecuteNumber());
         String json = new ObjectMapper().writeValueAsString(requestObj);
 
         HttpPost request = new HttpPost(dataCase.getServerApiPathes().get(0) + dataCase.getMethodName());
         request.addHeader("Content-Type", dataCase.getContentType());
+
+        if(CollectionUtils.isNotEmpty(dataCase.getAuthHeaders())) {
+            dataCase.getAuthHeaders().forEach(i -> {
+                request.addHeader(i.getKey(), i.getValue());
+            });
+        }
 //        request.setHeader("Authorization", TOKEN);
 
         log.info(String.format("--> %s request body: %s", request, json));

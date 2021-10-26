@@ -1,5 +1,6 @@
 package com.skg.apimonkey.service.util;
 
+import com.skg.apimonkey.domain.model.RequestType;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -22,18 +23,31 @@ public class DataCreationPostRequestUtil {
     private final static String MEDIA_TYPE = "application/json";
 
     public static void generatePostBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
-        generateBody(dataCase, openApi, variantNumber);
+        generateBody(dataCase, openApi, variantNumber, RequestType.POST);
     }
 
-    public static void generateBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
+    public static void generatePutBody(TestDataCase dataCase, OpenAPI openApi, Integer variantNumber) {
+        generateBody(dataCase, openApi, variantNumber, RequestType.PUT);
+    }
 
-//        log.info("generate body for POST [{}]", dataCase.getMethodName());
+    public static void generateBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber, RequestType requestType) {
+
+//        log.info("generate body for POST / PUT [{}]", dataCase.getMethodName());
         PathItem pathItem = dataCase.getPathItem();
 
-        RequestBody requestBody = pathItem.getPost().getRequestBody();
+        RequestBody requestBody = null;
+
+        if(requestType.equals(RequestType.POST)) {
+            requestBody = pathItem.getPost().getRequestBody();
+            dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
+        }
+        if(requestType.equals(RequestType.PUT)) {
+            requestBody = pathItem.getPut().getRequestBody();
+            dataCase.setSummary(StringUtils.isEmpty(pathItem.getPut().getSummary()) ? pathItem.getPut().getDescription() : pathItem.getPut().getSummary());
+        }
 
         dataCase.setContentType(MEDIA_TYPE);
-        dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
+
         dataCase.setServerApiPathes(openApi.getServers().stream()
                 .map(Server::getUrl)
                 .collect(Collectors.toList()));

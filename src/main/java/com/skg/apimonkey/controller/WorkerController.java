@@ -69,7 +69,8 @@ public class WorkerController {
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         String responseStr = "";
 
-        if(Objects.equals(data.getDataCase().getRequestType(), RequestType.POST)) {
+        if(Objects.equals(data.getDataCase().getRequestType(), RequestType.POST) ||
+                Objects.equals(data.getDataCase().getRequestType(), RequestType.PUT)) {
             responseStr = response.getBody() == null ? "empty" : objectMapper.writeValueAsString(objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), HashMap.class));
 
         } else if (Objects.equals(data.getDataCase().getRequestType(), RequestType.GET)) {

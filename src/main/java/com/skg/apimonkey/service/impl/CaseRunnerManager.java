@@ -33,7 +33,10 @@ public class CaseRunnerManager {
 
             case GET:
                 return getCaseRunnerService.executeCase(dataCase);
+
             case PUT:
+                return postCaseRunnerService.executeCase(dataCase);
+
             case DELETE:
             case HEAD:
                 log.warn("Data generation for method {} not implemented yet!", dataCase.getRequestType().name());
