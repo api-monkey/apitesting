@@ -86,6 +86,15 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
         try {
             result = new OpenAPIParser().readContents(swaggerData.getPageContent(), null, null);
 
+            //fix server url
+            result.getOpenAPI().getServers().forEach(i -> {
+                if (!StringUtils.containsIgnoreCase(i.getUrl(), "http")) {
+                    i.setUrl((swaggerData.getPassedUrl().endsWith("/") &&  i.getUrl().startsWith("/")) ?
+                            swaggerData.getPassedUrl().substring(0, swaggerData.getPassedUrl().length() - 1) + i.getUrl() :
+                            swaggerData.getPassedUrl() + i.getUrl());
+                }
+            });
+
         } catch (Exception e) {
             log.error("Error parsing swagger url: {}", e);
         }

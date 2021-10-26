@@ -34,7 +34,9 @@ public class DataCreationPostRequestUtil {
 
         dataCase.setContentType(MEDIA_TYPE);
         dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
-        dataCase.setServerApiPathes(openApi.getServers().stream().map(Server::getUrl).collect(Collectors.toList()));
+        dataCase.setServerApiPathes(openApi.getServers().stream()
+                .map(Server::getUrl)
+                .collect(Collectors.toList()));
 
         if ( Objects.isNull(requestBody) ) {
             log.warn("RequestBody empty for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
