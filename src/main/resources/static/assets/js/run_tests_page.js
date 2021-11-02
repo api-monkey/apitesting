@@ -88,7 +88,7 @@ function addRunButtonEvents(runButton) {
                         runButton.hide();
                     }
                 },
-                // timeout: 20000
+                timeout: 30000
             });
 
         });

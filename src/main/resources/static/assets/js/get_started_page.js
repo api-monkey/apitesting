@@ -41,7 +41,7 @@ $(document).ready(function () {
                 complete: function() {
                     loadingStop();
                 },
-                timeout: 20000
+                timeout: 60000
             });
         }
     });

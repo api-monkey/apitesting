@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.skg.apimonkey.service.util.StringUtil.isJson;
 import static com.skg.apimonkey.service.util.WebUtil.downloadSwaggerJson;
 import static com.skg.apimonkey.service.util.WebUtil.getCleanStartPage;
 
@@ -42,7 +45,10 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
         String htmlBody;
         boolean updated = false;
 
-        if (StringUtils.isNotEmpty(swaggerUrl) && !StringUtils.endsWithIgnoreCase(swaggerUrl, JSON_SUFFIX)) {
+        if (StringUtils.isNotEmpty(swaggerUrl) &&
+                !StringUtils.endsWithIgnoreCase(swaggerUrl, JSON_SUFFIX) &&
+                !isJson(downloadSwaggerJson(swaggerUrl))) {
+
             jsonUrl = getJsonUrlFromSwaggerPage(swaggerUrl);
         }
         jsonUrl = getCleanStartPage(jsonUrl);
@@ -57,14 +63,22 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
             updated = true;
         }
 
+        boolean isExist = swaggerData != null;
+
         if(updated && StringUtils.isNotEmpty(htmlBody)) {
-            boolean isExist = swaggerData != null;
-            swaggerData = isExist ? swaggerData : new SwaggerData();
+
+            swaggerData = isExist ?
+                    swaggerData :
+                    new SwaggerData();
             swaggerData.setUrl(jsonUrl);
             swaggerData.setPassedUrl(swaggerUrl);
-            swaggerData.setHashId(new HmacUtils(HmacAlgorithms.HMAC_SHA_1, "api-monkey").hmacHex(jsonUrl + new Date()).substring(0, 16));
+            swaggerData.setHashId(isExist ?
+                    swaggerData.getHashId() :
+                    new HmacUtils(HmacAlgorithms.HMAC_SHA_1, "api-monkey").hmacHex(jsonUrl + new Date()).substring(0, 16));
             swaggerData.setPageContent(htmlBody);
-            swaggerData.setCreatedDate(isExist ? swaggerData.getCreatedDate() : new Date());
+            swaggerData.setCreatedDate(isExist ?
+                    swaggerData.getCreatedDate() :
+                    new Date());
             swaggerData.setUpdatedDate(new Date());
             swaggerDataRepository.save(swaggerData);
         }
@@ -107,6 +121,7 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
 
         try {
 
+            URL sourceUrl = new URL(path);
             Document doc = Jsoup.parse(new URL(path), 30000);
             List<String> list = new ArrayList<>();
             Matcher matcher = Pattern.compile("[\"'](.*.json)[\"']", Pattern.CASE_INSENSITIVE).matcher(doc.html());
@@ -114,24 +129,43 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
                 list.add(matcher.group());
             }
 
-            String endPart = "";
+            // url has .json ending case
             if (CollectionUtils.isNotEmpty(list)) {
+
+                String endPart = "";
+
                 String[] parts = list.get(0).split("\"");
                 endPart = Arrays.stream(parts)
                         .filter(StringUtils::isNotEmpty)
                         .filter(i -> StringUtils.containsIgnoreCase(i, JSON_SUFFIX))
                         .findFirst()
                         .orElse(null);
-            }
 
-            if(!StringUtils.containsIgnoreCase(endPart, "http")) {
-                URL sourceUrl = new URL(path);
-                result = sourceUrl.getProtocol() + "://" + sourceUrl.getHost() + (StringUtils.startsWith(endPart, "/") ? "" : "/") + endPart;
+                if(!StringUtils.containsIgnoreCase(endPart, "http")) {
+                    result = sourceUrl.getProtocol() + "://" + sourceUrl.getHost() + (StringUtils.startsWith(endPart, "/") ? "" : "/") + endPart;
 
+                } else {
+                    result = endPart;
+                }
+
+            // looking url with json response
             } else {
-                result = endPart;
 
+                Elements links = doc.select("a");
+                for (Element link: links) {
+                    String linkString = link.attr("abs:href");
+                    if (StringUtils.isNotEmpty(linkString) && StringUtils.containsIgnoreCase(linkString, sourceUrl.getHost())) {
+
+                        String jsonStr = downloadSwaggerJson(linkString);
+
+                        if(isJson(jsonStr)) {
+                            result = linkString;
+                            break;
+                        }
+                    }
+                }
             }
+
 
         } catch (Exception e) {
             log.error("Error crawling .json link from the page [{}]: ", path, e);

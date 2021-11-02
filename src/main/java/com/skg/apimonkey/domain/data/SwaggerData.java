@@ -24,7 +24,7 @@ public class SwaggerData implements Serializable {
     @Column(name = "HASH_ID")
     private String hashId;
 
-    @Column(name = "PAGE_CONTENT", columnDefinition = "TEXT")
+    @Column(name = "PAGE_CONTENT", columnDefinition = "LONGTEXT")
     private String pageContent;
 
     @Column(name="UPDATED_DATE")

@@ -18,6 +18,7 @@ import java.util.Objects;
 public class StringUtil {
 
     public static boolean isJson(String text) {
+        if(StringUtils.isEmpty(text)) return false;
         try {
             new JSONObject(text);
 

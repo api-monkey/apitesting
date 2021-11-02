@@ -30,16 +30,9 @@ public class WorkerController {
     @Autowired
     private CaseRunnerManager caseRunnerManager;
 
-
-    @GetMapping("/test")
-    public Object home(@RequestParam String param) {
-
-        return parserService.getSwaggerData(param);
-    }
-
     @GetMapping("/rest/parseSwaggerUrl")
     public InputUrlResponse parseSwaggerUrl(@RequestParam(value = "url") String url,
-                                            @RequestParam(value = "variantNumber", required = false, defaultValue = "1") Integer variantNumber) {
+                                            @RequestParam(value = "variantNumber", required = false, defaultValue = "4") Integer variantNumber) {
 
         String hashId = null;
         String errorMessage = null;
@@ -71,7 +64,19 @@ public class WorkerController {
 
         if(Objects.equals(data.getDataCase().getRequestType(), RequestType.POST) ||
                 Objects.equals(data.getDataCase().getRequestType(), RequestType.PUT)) {
-            responseStr = response.getBody() == null ? "empty" : objectMapper.writeValueAsString(objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), HashMap.class));
+
+            if(response.getBody() == null) {
+                responseStr = "empty";
+            } else {
+
+                try{
+                    responseStr = objectMapper.writeValueAsString(objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), HashMap.class));
+                } catch (Exception ignored) {}
+
+                if(StringUtils.isEmpty(responseStr)) {
+                    responseStr = new String(response.getBody(), StandardCharsets.UTF_8);
+                }
+            }
 
         } else if (Objects.equals(data.getDataCase().getRequestType(), RequestType.GET)) {
             if (response.getBody() != null && isJson(new String(response.getBody(), StandardCharsets.UTF_8)) ) {
