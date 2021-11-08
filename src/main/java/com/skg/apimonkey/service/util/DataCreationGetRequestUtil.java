@@ -15,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.skg.apimonkey.service.util.RequestValuesUtil.getInHeadParameters;
+import static com.skg.apimonkey.service.util.RequestValuesUtil.getInPathOrQueryParameters;
+
 
 @Slf4j
 public class DataCreationGetRequestUtil {
@@ -31,18 +34,23 @@ public class DataCreationGetRequestUtil {
 //        log.info("generate body for GET [{}]", dataCase.getMethodName());
         PathItem pathItem = dataCase.getPathItem();
 
-        List<Parameter> parameters = pathItem.getGet().getParameters();
+        List<Parameter> parameters = getInPathOrQueryParameters(pathItem.getGet().getParameters());
+        List<Parameter> inHeaderParameters = getInHeadParameters(pathItem.getGet().getParameters());
 
         dataCase.setContentType(MEDIA_TYPE);
         dataCase.setSummary(StringUtils.isEmpty(pathItem.getGet().getSummary()) ? pathItem.getGet().getDescription() : pathItem.getGet().getSummary());
         dataCase.setServerApiPathes(openApi.getServers().stream().map(Server::getUrl).collect(Collectors.toList()));
+
+        //create in header params
+        List<ParametersDataCase> inHeaderDataCases = buildParamsVariantsFromSchema(inHeaderParameters, dataCase.getMethodName(), variantNumber);
+        dataCase.setInHeaderParameters(inHeaderDataCases);
 
         //create request params
         List<ParametersDataCase> paramsVariants = buildParamsVariantsFromSchema(parameters, dataCase.getMethodName(), variantNumber);
         dataCase.setRequestParamsVariants(paramsVariants);
     }
 
-    private static List<ParametersDataCase> buildParamsVariantsFromSchema(List<Parameter> parameters, String query, int variants) {
+    public static List<ParametersDataCase> buildParamsVariantsFromSchema(List<Parameter> parameters, String query, int variants) {
 
         List<ParametersDataCase> resultList = new ArrayList<>();
 
@@ -76,6 +84,7 @@ public class DataCreationGetRequestUtil {
                 }
 
                 String value = (String) RequestValuesUtil.getValueByType(schema, i);
+                parameterItem.setRequired(param.getRequired() != null && param.getRequired());
                 parameterItem.setValue(value);
 
                 if(StringUtils.equalsIgnoreCase(param.getIn(), "path")) {

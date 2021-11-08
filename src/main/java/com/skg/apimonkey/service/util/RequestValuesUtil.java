@@ -1,6 +1,7 @@
 package com.skg.apimonkey.service.util;
 
 import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -10,13 +11,16 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 
 @Slf4j
 public class RequestValuesUtil {
 
     //supported media type
-    private final static String MEDIA_TYPE = "application/json";
+    private final static String IN_HEAD_TYPE = "header";
+    private final static String IN_PATH_TYPE = "path";
+    private final static String IN_QUERY_TYPE = "query";
     private final static String EMAIL = "email";
     private final static String STRING = "string";
     private final static String INTEGER = "integer";
@@ -187,5 +191,23 @@ public class RequestValuesUtil {
                 StringUtils.equalsIgnoreCase(schema.getType(), "object") ||
                 MapUtils.isNotEmpty(schema.getProperties()) ||
                 StringUtils.isNotEmpty(schema.get$ref());
+    }
+
+    public static List<Parameter> getInHeadParameters(List<Parameter> parameters) {
+        if (CollectionUtils.isNotEmpty(parameters)) {
+            return parameters.stream()
+                    .filter(i -> StringUtils.equalsIgnoreCase(i.getIn(), IN_HEAD_TYPE))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    public static List<Parameter> getInPathOrQueryParameters(List<Parameter> parameters) {
+        if (CollectionUtils.isNotEmpty(parameters)) {
+            return parameters.stream()
+                    .filter(i -> StringUtils.equalsIgnoreCase(i.getIn(), IN_PATH_TYPE) || StringUtils.equalsIgnoreCase(i.getIn(), IN_QUERY_TYPE))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 }

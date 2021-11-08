@@ -39,3 +39,4 @@ logs/
 node_modules/
 html&css/
 .vscode/
+package-lock.json

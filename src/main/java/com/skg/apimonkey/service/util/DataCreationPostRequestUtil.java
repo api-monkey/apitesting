@@ -1,11 +1,13 @@
 package com.skg.apimonkey.service.util;
 
+import com.skg.apimonkey.domain.model.ParametersDataCase;
 import com.skg.apimonkey.domain.model.RequestType;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.skg.apimonkey.service.util.DataCreationGetRequestUtil.buildParamsVariantsFromSchema;
+import static com.skg.apimonkey.service.util.RequestValuesUtil.getInHeadParameters;
 
 
 @Slf4j
@@ -36,13 +41,16 @@ public class DataCreationPostRequestUtil {
         PathItem pathItem = dataCase.getPathItem();
 
         RequestBody requestBody = null;
+        List<Parameter> inHeaderParameters = null;
 
         if(requestType.equals(RequestType.POST)) {
             requestBody = pathItem.getPost().getRequestBody();
+            inHeaderParameters = getInHeadParameters(pathItem.getPost().getParameters());
             dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
         }
         if(requestType.equals(RequestType.PUT)) {
             requestBody = pathItem.getPut().getRequestBody();
+            inHeaderParameters = getInHeadParameters(pathItem.getPut().getParameters());
             dataCase.setSummary(StringUtils.isEmpty(pathItem.getPut().getSummary()) ? pathItem.getPut().getDescription() : pathItem.getPut().getSummary());
         }
 
@@ -66,6 +74,9 @@ public class DataCreationPostRequestUtil {
             dataCase.setBroken(true);
             return;
         }
+
+        List<ParametersDataCase> inHeaderDataCases = buildParamsVariantsFromSchema(inHeaderParameters, dataCase.getMethodName(), variantNumber);
+        dataCase.setInHeaderParameters(inHeaderDataCases);
 
         //create request body
         List<Object> bodyObjectVariants = buildBodyVariantsFromSchema(mediaType.getSchema(), openApi.getComponents(), variantNumber);

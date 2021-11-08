@@ -23,6 +23,7 @@ public class TestDataCase {
     private int executeNumber;
     private List<String> serverApiPathes;
     private List<AuthHeader> authHeaders;
+    private List<ParametersDataCase> inHeaderParameters;
 
     private boolean isBroken;
     private String errorMessage;
