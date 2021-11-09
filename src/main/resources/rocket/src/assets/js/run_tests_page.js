@@ -103,11 +103,15 @@ function addGenerateButtonEvents() {
 
         setTimeout(function(button) {
             let parentDiv = button.parent('div'),
-                runCases = parentDiv.find('.test-cases');
+                runCases = parentDiv.find('.test-cases'),
+                headerText = parentDiv.find('.header-text'),
+                headerParams = parentDiv.find('.header-params');
 
             button.remove();
             parentDiv.append('<button type="button" class="btn btn-tertiary width-220 m-2 run-button">Run tests</button>');
             runCases.fadeIn('fast');
+            headerText.fadeIn('fast');
+            headerParams.fadeIn('fast');
 
             let runButton = parentDiv.find('.run-button');
 

@@ -90,12 +90,38 @@
                                     <span>[[${item.summary}]]</span>
                                 </div>
 
+                                <th:block th:if="${not #lists.isEmpty(item.inHeaderParameters)}">
+                                    <div style="display: none" class="header-text col-12 col-md-12">
+                                        <span>Header params:</span>
+                                    </div>
+
+                                    <div style="display: none" class="header-params row row-grid font-weight-bolder m-0 p-0 w-100 mb-1">
+
+                                        <th:block th:each="inHeaderParamsVariantsItem,inHeaderParamsVariantsIndex: ${item.inHeaderParameters}">
+
+                                            <th:block th:if="${not #lists.isEmpty(inHeaderParamsVariantsItem.parameterItems)}">
+
+                                                <div th:class="'p-0 col-12 col-md-' + ${12 / variantNumber}">
+                                                    <th:block th:each="headerItem,headerItemIndex: ${inHeaderParamsVariantsItem.parameterItems}">
+
+                                                        <div class="ml-0 mb-0 col-md-12 form-group row" th:classappend="${headerItem.required ? 'required' : 'required'}">
+                                                            <label class="col-sm-12 col-form-label pb-0" for="description-item">[[${headerItem.name}]]</label>
+                                                            <input type="text" class="form-control col-sm-12" name="description" id="description-item" th:value="${headerItem.value}">
+                                                        </div>
+
+                                                    </th:block>
+                                                </div>
+                                            </th:block>
+                                        </th:block>
+
+                                    </div>
+                                </th:block>
+
                                 <div style="display: none" class="response-text col-12 col-md-12">
                                     <span>Response:</span>
                                 </div>
 
                                 <div style="display: none" class="test-cases row row-grid font-weight-bolder m-0 p-0 w-100 mb-1">
-
 
 
                                     <th:block th:if="${item.requestType.name == 'GET' and not #lists.isEmpty(item.requestParamsVariants)}" th:each="paramsVariantsItem,paramsVariantsIndex: ${item.requestParamsVariants}">

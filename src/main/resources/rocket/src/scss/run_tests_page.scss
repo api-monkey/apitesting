@@ -33,3 +33,12 @@
 .bg-error {
   background-color: #ffd6d6 !important;
 }
+
+.form-group.required .col-form-label:after {
+  content: "*";
+  color: red;
+}
+
+.border-grey {
+  border-color: #eaedf2!important;
+}
