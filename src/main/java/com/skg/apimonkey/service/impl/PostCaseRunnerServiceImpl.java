@@ -8,10 +8,13 @@ import com.skg.apimonkey.service.util.WebUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.springframework.stereotype.Service;
+
+import static com.skg.apimonkey.service.util.WebUtil.setHeaderParamsToRequest;
 
 
 @Service
@@ -43,12 +46,17 @@ public class PostCaseRunnerServiceImpl implements CaseRunnerService {
         }
 //        request.setHeader("Authorization", TOKEN);
 
-        log.info(String.format("--> %s request body: %s", request, json));
+        // set header params
+        setHeaderParamsToRequest(dataCase, request);
 
-        StringEntity entity = new StringEntity(json, "UTF-8");
-        entity.setContentEncoding("UTF-8");
-        entity.setContentType(dataCase.getContentType());
-        request.setEntity(entity);
+        log.info("--> {} request body: {}, headers: {}", request, json, request.getAllHeaders());
+
+        if(!StringUtils.equalsIgnoreCase(json, "{}")) {
+            StringEntity entity = new StringEntity(json, "UTF-8");
+            request.setEntity(entity);
+            entity.setContentEncoding("UTF-8");
+            entity.setContentType(dataCase.getContentType());
+        }
 
         return request;
     }

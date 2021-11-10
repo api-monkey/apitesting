@@ -27,8 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.skg.apimonkey.service.util.StringUtil.isJson;
-import static com.skg.apimonkey.service.util.WebUtil.downloadSwaggerJson;
-import static com.skg.apimonkey.service.util.WebUtil.getCleanStartPage;
+import static com.skg.apimonkey.service.util.WebUtil.*;
 
 @Service
 @Slf4j
@@ -101,13 +100,7 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
             result = new OpenAPIParser().readContents(swaggerData.getPageContent(), null, null);
 
             //fix server url
-            result.getOpenAPI().getServers().forEach(i -> {
-                if (!StringUtils.containsIgnoreCase(i.getUrl(), "http")) {
-                    i.setUrl((swaggerData.getPassedUrl().endsWith("/") &&  i.getUrl().startsWith("/")) ?
-                            swaggerData.getPassedUrl().substring(0, swaggerData.getPassedUrl().length() - 1) + i.getUrl() :
-                            swaggerData.getPassedUrl() + i.getUrl());
-                }
-            });
+            fixServerUrl(result, swaggerData.getPassedUrl());
 
         } catch (Exception e) {
             log.error("Error parsing swagger url: {}", e);

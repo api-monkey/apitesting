@@ -71,9 +71,9 @@
                 <th:block th:if="${not #lists.isEmpty(cases)}" th:each="item,iter: ${cases}">
 
                     <div th:id="${item.dataId}">
-                        <div class="opblock-summary border border-default rounded mt-2">
+                        <div class="border border-default rounded mt-2">
 
-                            <div class="row row-grid align-items-center font-weight-bolder m-2">
+                            <div class="task-block row row-grid align-items-center font-weight-bolder m-2">
                                 <div class="col-12 col-md-3">
                                     <h3>
                                         <span th:class="'badge ' + ${#strings.toLowerCase(item.requestType)} + '-color'">
@@ -90,23 +90,23 @@
                                     <span>[[${item.summary}]]</span>
                                 </div>
 
-                                <th:block th:if="${not #lists.isEmpty(item.inHeaderParameters)}">
+                                <th:block th:if="${not #lists.isEmpty(item.inHeaderParameters) && not item.inHeaderParameters[0].isNoParams}">
                                     <div style="display: none" class="header-text col-12 col-md-12">
                                         <span>Header params:</span>
                                     </div>
 
-                                    <div style="display: none" class="header-params row row-grid font-weight-bolder m-0 p-0 w-100 mb-1">
+                                    <div style="display: none" class="header-params row row-grid font-weight-bolder m-0 p-0 w-100 mb-3">
 
                                         <th:block th:each="inHeaderParamsVariantsItem,inHeaderParamsVariantsIndex: ${item.inHeaderParameters}">
 
                                             <th:block th:if="${not #lists.isEmpty(inHeaderParamsVariantsItem.parameterItems)}">
 
-                                                <div th:class="'p-0 col-12 col-md-' + ${12 / variantNumber}">
+                                                <div th:class="'p-0 col-12 col-md-' + ${12 / variantNumber} + ' header-params-' + ${inHeaderParamsVariantsIndex.index}">
                                                     <th:block th:each="headerItem,headerItemIndex: ${inHeaderParamsVariantsItem.parameterItems}">
 
-                                                        <div class="ml-0 mb-0 col-md-12 form-group row" th:classappend="${headerItem.required ? 'required' : 'required'}">
-                                                            <label class="col-sm-12 col-form-label pb-0" for="description-item">[[${headerItem.name}]]</label>
-                                                            <input type="text" class="form-control col-sm-12" name="description" id="description-item" th:value="${headerItem.value}">
+                                                        <div class="ml-0 mb-0 col-md-12 form-group row" th:classappend="${headerItem.required ? 'required' : ''}">
+                                                            <label class="col-sm-12 col-form-label pb-0" th:for="'h-' + ${headerItem.name} + '-' + ${item.summary}">[[${headerItem.name}]]</label>
+                                                            <input type="text" class="form-control col-sm-12" th:name="${headerItem.name}" th:id="'h-' + ${headerItem.name} + '-' + ${item.summary}" th:value="${headerItem.value}">
                                                         </div>
 
                                                     </th:block>

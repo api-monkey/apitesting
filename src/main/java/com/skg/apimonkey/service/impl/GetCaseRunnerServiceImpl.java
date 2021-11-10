@@ -14,6 +14,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Service;
 
+import static com.skg.apimonkey.service.util.WebUtil.setHeaderParamsToRequest;
+
 @Service
 @Slf4j
 public class GetCaseRunnerServiceImpl implements CaseRunnerService {
@@ -35,7 +37,6 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
 
         URIBuilder builder = new URIBuilder(dataCase.getServerApiPathes().get(0) + getParamsObj.getModifiedPath());
         if (!isNoParams) {
-
             for (ParameterItem item : getParamsObj.getParameterItems()) {
                 if (!item.isInPath()) {
                     builder.setParameter(item.getName(), item.getValue());
@@ -45,8 +46,10 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
 
         HttpGet request = new HttpGet(builder.build().toString());
 
-        log.info(String.format("--> %s request: %s", request, getParamsObj.getModifiedPath()));
+        // set header params
+        setHeaderParamsToRequest(dataCase, request);
 
+        log.info("--> {} request: {}, headers: {}", request, getParamsObj.getModifiedPath(), request.getAllHeaders());
         log.info(String.valueOf(request));
 
         request.addHeader("Accept", dataCase.getContentType());

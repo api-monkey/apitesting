@@ -30,6 +30,26 @@ function addRunButtonEvents(runButton) {
                 caseNumber = parseInt(keyParts[1]),
                 dataToSend = runDataMap[caseDataId];
 
+            // headers params
+            let headersParams = runItem.parents('.task-block').find('.header-params').find('.header-params-' + caseNumber).find('input');
+            if(headersParams && headersParams.length > 0) {
+
+                let headerParamsFromServer = dataToSend.inHeaderParameters[caseNumber].parameterItems;
+                headersParams.each(function () {
+                    let header = $(this),
+                        name = header.attr("name"),
+                        value = header.val();
+
+                    if (name && name.length > 0) {
+                        $.each(headerParamsFromServer, function (i, headerFromServer) {
+                            if(headerFromServer.name === name) {
+                                headerFromServer.value = value;
+                            }
+                        });
+                    }
+                });
+            }
+
             if((dataToSend.requestType == 'POST' || dataToSend.requestType == 'PUT') && dataToSend.requestBodyVariants && dataToSend.requestBodyVariants[caseNumber]) {
                 dataToSend.requestBodyVariants[caseNumber] = JSON.parse(runItem.val());
             }

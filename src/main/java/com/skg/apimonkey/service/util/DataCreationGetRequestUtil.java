@@ -59,7 +59,10 @@ public class DataCreationGetRequestUtil {
             ParametersDataCase paramsObject = new ParametersDataCase();
             paramsObject.setModifiedPath(query);
             paramsObject.setNoParams(true);
-            return Collections.singletonList(paramsObject);
+            for (int i = 0; i < variants; i++) {
+                resultList.add(paramsObject);
+            }
+            return resultList;
         }
 
         for (int i = 0; i < variants; i++) {
