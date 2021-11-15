@@ -3,12 +3,17 @@ package com.skg.apimonkey.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.skg.apimonkey.domain.data.UserDataCase;
 import com.skg.apimonkey.domain.model.RequestType;
+import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.domain.model.response.InputUrlResponse;
 import com.skg.apimonkey.domain.model.response.RunCaseRequest;
 import com.skg.apimonkey.domain.model.response.RunCaseResponse;
+import com.skg.apimonkey.repository.SwaggerDataRepository;
+import com.skg.apimonkey.repository.UserDataCaseRepository;
 import com.skg.apimonkey.service.SwaggerParserService;
 import com.skg.apimonkey.service.impl.CaseRunnerManager;
+import com.skg.apimonkey.service.util.MappingUtil;
 import com.skg.apimonkey.service.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -29,6 +35,10 @@ public class WorkerController {
     private SwaggerParserService parserService;
     @Autowired
     private CaseRunnerManager caseRunnerManager;
+    @Autowired
+    private UserDataCaseRepository userDataCaseRepository;
+    @Autowired
+    private SwaggerDataRepository swaggerDataRepository;
 
     @GetMapping("/rest/parseSwaggerUrl")
     public InputUrlResponse parseSwaggerUrl(@RequestParam(value = "url") String url,
@@ -55,6 +65,11 @@ public class WorkerController {
 
     @PostMapping("/rest/runCase")
     public RunCaseResponse runCase(@RequestBody RunCaseRequest data) throws JsonProcessingException {
+
+        // update in database
+        if (data.getDataCase() != null && data.getDataCase().getExecuteNumber() == 0) {
+            updateTestDataInDatabase(data);
+        }
 
         Response response = caseRunnerManager.runDataCase(data.getDataCase());
 
@@ -92,5 +107,22 @@ public class WorkerController {
                 .responseCode(response.getStatusLine().getStatusCode())
                 .responseBody(responseStr)
                 .build();
+    }
+
+    private synchronized void updateTestDataInDatabase(RunCaseRequest data) {
+        TestDataCase testDataCase = data.getDataCase();
+        UserDataCase userDataCase = userDataCaseRepository.findFirstByDataIdAndDataName(testDataCase.getDataId(), testDataCase.getSummary());
+        UserDataCase toSave = MappingUtil.toUserDataCase(testDataCase);
+
+        if (userDataCase != null) {
+            userDataCase.setDataCaseContent(toSave.getDataCaseContent());
+            userDataCase.setUpdatedDate(new Date());
+
+        } else {
+
+            userDataCase = toSave;
+            userDataCase.setSwaggerData(swaggerDataRepository.findFirstByHashId(data.getSwaggerDataHashId()));
+        }
+        userDataCaseRepository.save(userDataCase);
     }
 }

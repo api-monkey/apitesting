@@ -74,7 +74,8 @@ function addRunButtonEvents(runButton) {
 
             let sendBody  = {
                 dataId: caseDataId,
-                dataCase: dataToSend
+                dataCase: dataToSend,
+                swaggerDataHashId: window.swaggerDataHashId
             };
 
             count++;

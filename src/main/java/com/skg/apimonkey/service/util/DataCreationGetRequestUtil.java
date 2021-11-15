@@ -68,7 +68,6 @@ public class DataCreationGetRequestUtil {
         for (int i = 0; i < variants; i++) {
 
             ParametersDataCase paramsObject = new ParametersDataCase();
-            paramsObject.setParameters(parameters);
             paramsObject.setParameterItems(new ArrayList<>());
 
             String modifiedQuery = query;

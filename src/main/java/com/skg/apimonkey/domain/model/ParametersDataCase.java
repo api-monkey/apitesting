@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ParametersDataCase {
     private String modifiedPath;
-    private List<Parameter> parameters;
     private List<ParameterItem> parameterItems;
     private boolean isNoParams;
 }

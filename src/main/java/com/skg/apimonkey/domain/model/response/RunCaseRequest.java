@@ -12,5 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class RunCaseRequest implements Serializable {
     private String dataId;
+    private String swaggerDataHashId;
     private TestDataCase dataCase;
 }
