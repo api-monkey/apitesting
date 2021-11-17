@@ -9,6 +9,50 @@ $(document).ready(function () {
 
     addGenerateButtonEvents();
 
+    //adding retry logic
+    let retryButtons = $('.retry-button');
+    retryButtons.on('click', function() {
+
+        let retryButton = $(this);
+        let parentDiv = retryButton.parent('div'),
+            runButton = parentDiv.find('.run-button'),
+            headerText = parentDiv.find('.header-text'),
+            headerParams = parentDiv.find('.header-params'),
+            runCases = parentDiv.find('.run-case'),
+            respText = parentDiv.find('.response-text');
+
+        respText.fadeOut('fast');
+        retryButton.hide();
+        runButton.show();
+        headerText.fadeIn('fast');
+        headerParams.fadeIn('fast');
+
+        runCases.each(function() {
+
+            let runItem = $(this),
+                keyParts = runItem.data("test-case").split(':'),
+                caseDataId = keyParts[0],
+                caseNumber = parseInt(keyParts[1]),
+                savedData = runDataMap[caseDataId];
+
+            runItem.removeClass('bg-200');
+            runItem.removeClass('bg-error');
+            runItem.attr("disabled", false);
+            runItem.val('');
+
+            if((savedData.requestType == 'POST' || savedData.requestType == 'PUT') && savedData.requestBodyVariants && savedData.requestBodyVariants[caseNumber]) {
+                let jsonObj = savedData.requestBodyVariants[caseNumber],
+                    jsonStr = JSON.stringify(jsonObj, null, 4);
+                runItem.val(jsonStr);
+            }
+
+            if(savedData.requestType == 'GET' && savedData.requestParamsVariants && savedData.requestParamsVariants[caseNumber]) {
+                let jsonObj = savedData.requestParamsVariants[caseNumber].parameterItems,
+                    jsonStr = JSON.stringify(jsonObj, null, 4);
+                runItem.val(jsonStr);
+            }
+        });
+    });
 });
 
 function addRunButtonEvents(runButton) {
@@ -55,7 +99,7 @@ function addRunButtonEvents(runButton) {
             }
 
             if(dataToSend.requestType == 'GET' && dataToSend.requestParamsVariants && dataToSend.requestParamsVariants[caseNumber]) {
-                // not implemented update params
+                dataToSend.requestParamsVariants[caseNumber].parameterItems = JSON.parse(runItem.val());
             }
 
             let authHeaders = [];
@@ -107,6 +151,11 @@ function addRunButtonEvents(runButton) {
                     if(--count <= 0) {
                         loadingStop();
                         runButton.hide();
+
+                        //adding retry
+                        let parentDiv = runButton.parent('div'),
+                            retryButton = parentDiv.find('.retry-button');
+                        retryButton.show();
                     }
                 },
                 timeout: 30000
@@ -121,12 +170,12 @@ function addGenerateButtonEvents() {
 
         loadingStart();
         let button = $(this);
+        let parentDiv = button.parent('div'),
+            runCases = parentDiv.find('.test-cases'),
+            headerText = parentDiv.find('.header-text'),
+            headerParams = parentDiv.find('.header-params');
 
         setTimeout(function(button) {
-            let parentDiv = button.parent('div'),
-                runCases = parentDiv.find('.test-cases'),
-                headerText = parentDiv.find('.header-text'),
-                headerParams = parentDiv.find('.header-params');
 
             button.remove();
             parentDiv.append('<button type="button" class="btn btn-tertiary width-220 m-2 run-button">Run tests</button>');

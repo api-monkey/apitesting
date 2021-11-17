@@ -16,6 +16,7 @@ import com.skg.apimonkey.service.impl.CaseRunnerManager;
 import com.skg.apimonkey.service.util.MappingUtil;
 import com.skg.apimonkey.service.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +68,15 @@ public class WorkerController {
     public RunCaseResponse runCase(@RequestBody RunCaseRequest data) throws JsonProcessingException {
 
         // update in database
-        if (data.getDataCase() != null && data.getDataCase().getExecuteNumber() == 0) {
-            updateTestDataInDatabase(data);
+        if (data.getDataCase() != null) {
+            int countBodies = CollectionUtils.isNotEmpty(data.getDataCase().getRequestBodyVariants()) ? data.getDataCase().getRequestBodyVariants().size() : 0;
+            int countParams = CollectionUtils.isNotEmpty(data.getDataCase().getRequestParamsVariants()) ? data.getDataCase().getRequestParamsVariants().size() : 0;
+            int countHParams = CollectionUtils.isNotEmpty(data.getDataCase().getInHeaderParameters()) ? data.getDataCase().getInHeaderParameters().size() : 0;
+            int casesSize = Math.max(countBodies, Math.max(countHParams, countParams));
+
+            if ((casesSize - 1) == data.getDataCase().getExecuteNumber()) {
+                updateTestDataInDatabase(data);
+            }
         }
 
         Response response = caseRunnerManager.runDataCase(data.getDataCase());
