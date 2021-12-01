@@ -49,6 +49,46 @@ public class ApiMonkeyController {
         return "index";
     }
 
+    @GetMapping("/why-api-monkey")
+    public String whyApiMonkeyPage(Model model) {
+
+        model.addAttribute("title", "Why API Monkey");
+        model.addAttribute("description", "Why API Monkey page");
+        model.addAttribute("robots", "index");
+
+        return "why_api_monkey_page";
+    }
+
+    @GetMapping("/blog")
+    public String blogPage(Model model) {
+
+        model.addAttribute("title", "Blog");
+        model.addAttribute("description", "Blog apiMonkey page");
+        model.addAttribute("robots", "index");
+
+        return "blog_page";
+    }
+
+    @GetMapping("/pricing")
+    public String pricingPage(Model model) {
+
+        model.addAttribute("title", "Pricing");
+        model.addAttribute("description", "Pricing apiMonkey page");
+        model.addAttribute("robots", "index");
+
+        return "pricing_page";
+    }
+
+    @GetMapping("/contact-us")
+    public String contactUsPage(Model model) {
+
+        model.addAttribute("title", "Contact us");
+        model.addAttribute("description", "Contact us page");
+        model.addAttribute("robots", "index");
+
+        return "contact_us_page";
+    }
+
     @GetMapping("/get-started")
     public String getStartedPage(Model model,
                                     HttpServletRequest request,

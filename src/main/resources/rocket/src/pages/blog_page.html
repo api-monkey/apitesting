@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    @@include('./_head.html', {
+        "path": "..",
+        "title": ""
+    })
+</head>
+
+<body>
+    @@include('./_navigation.html', {
+        "path": "..",
+        "classes": "navbar-dark navbar-theme-primary"
+    })
+    <main>
+
+        @@include('./_preloader.html', {
+            "path": ".."
+        })
+
+        <section class="section-header pb-6 pb-lg-8 bg-primary text-white">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-7">
+                        <h1 class="h1 display-1 font-weight-bolder mb-3">Blog</h1>
+                    </div>
+                    <div class="col-12 col-lg-5 mt-4 mt-lg-0">
+                        <img th:src="@{/assets/img/pages/image_banner.png}" alt="APIMonkey"/>
+                    </div>
+                </div>
+            </div>
+            <div class="pattern bottom"></div>
+        </section>
+
+        <section class="section section-md py-2 py-md-0 bg-white">
+            <div class="container">
+                <div class="row row-grid align-items-center">
+                    <div class="col-12 col-lg-12">
+                        <h2 class="font-weight-bolder mb-4">Blog</h2>
+                        <p class="lead mb-0">Blog text</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @@include('./_footer.html', {
+        "path": "..",
+        "classes": "bg-primary text-white"
+        })
+
+    </main>
+
+    @@include('./_scripts.html', {
+        "path": ".."
+    })
+
+</body>
+</html>

@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    @@include('./_head.html', {
-    "path": ".."
-    })
-    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
-</head>
+    <head>
+        @@include('./_head.html', {
+            "path": ".."
+        })
+        <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    </head>
 
 <body>
     @@include('./_navigation.html', {
         "path": "..",
         "classes": "navbar-dark navbar-theme-primary"
     })
-<main>
+    <main>
 
-    @@include('./_preloader.html', {
-        "path": ".."
-    })
+        @@include('./_preloader.html', {
+            "path": ".."
+        })
 
-    <section class="section-header pb-6 pb-lg-8 bg-primary text-white">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-7">
-                    <h1 class="h1 display-1 font-weight-bolder mb-3">The No-code API</h1>
-                    <h1 class="h1 display-1 font-weight-bolder mb-3">testing solution</h1>
-                    <p class="lead mb-0">You build the API. We test it for you.</p>
-                    <p class="lead mb-0">Get started with testing your</p>
-                    <p class="lead mb-3 mb-lg-5">API's in minutes not days.</p>
+        <section class="section-header pb-6 pb-lg-8 bg-primary text-white">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-7">
+                        <h1 class="h1 display-1 font-weight-bolder mb-3">The No-code API</h1>
+                        <h1 class="h1 display-1 font-weight-bolder mb-3">testing solution</h1>
+                        <p class="lead mb-0">You build the API. We test it for you.</p>
+                        <p class="lead mb-0">Get started with testing your</p>
+                        <p class="lead mb-3 mb-lg-5">API's in minutes not days.</p>
 
-                    <div class="text-left text-primary">
-                        <a role="button" th:href="@{/get-started}" class="btn btn-lg btn-light mr-3">Get started</a>
-                        <a role="button" th:href="@{/get-started}" class="btn btn-lg btn-light disabled">View Demo</a>
+                        <div class="text-left text-primary">
+                            <a role="button" th:href="@{/get-started}" class="btn btn-lg btn-light mr-3">Get started</a>
+                            <a role="button" th:href="@{/get-started}" class="btn btn-lg btn-light disabled">View Demo</a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5 mt-4 mt-lg-0">
+                        <img th:src="@{/assets/img/pages/image_banner.png}" alt="APIMonkey"/>
                     </div>
                 </div>
-                <div class="col-12 col-lg-5 mt-4 mt-lg-0">
-                    <img th:src="@{/assets/img/pages/image_banner.png}" alt="APIMonkey"/>
-                </div>
             </div>
-        </div>
-            <div class="pattern bottom"></div>
-    </section>
+                <div class="pattern bottom"></div>
+        </section>
 
-    <section class="section section-md py-2 py-md-0 bg-white">
+        <section class="section section-md py-2 py-md-0 bg-white">
         <div class="container">
             <div class="row row-grid align-items-center">
                 <div class="col-12 col-lg-5">
@@ -56,51 +56,51 @@
             </div>
         </div>
     </section>
-    <!--<section class="section section-lg pt-6 pb-6 pt-md-7 pb-md-8 bg-primary">-->
-            <!--<div class="pattern top"></div>-->
-        <!--<div class="container">-->
-                <!--<div class="row justify-content-center desktop-width-1200">-->
-                    <!--<a class="mt-4" th:href="@{/scholarships/sign-up-scholarship}">-->
-                        <!--<img class="rounded" th:src="@{|https://i.imgur.com/YvUUrqo.jpg|}" alt="Sign up for $1000 CollegeHippo scholarship">-->
-                    <!--</a>-->
-                    <!--<a class="mt-4 ml-md-5" th:href="@{/scholarships/match-with-online-masters-graduate-programs}">-->
-                        <!--<img class="rounded" th:src="@{|https://i.imgur.com/22EdSRz.jpg|}" alt="Match me with Master’s Programs">-->
-                    <!--</a>-->
-                    <!--<a class="mt-4 ml-md-5" th:href="@{/scholarships/calculate-cost-graduate-program}">-->
-                        <!--<img class="rounded" th:src="@{|https://i.imgur.com/ME0bYeL.jpg|}" alt="Calculate cost of Master’s Degree">-->
-                    <!--</a>-->
+        <!--<section class="section section-lg pt-6 pb-6 pt-md-7 pb-md-8 bg-primary">-->
+                <!--<div class="pattern top"></div>-->
+            <!--<div class="container">-->
+                    <!--<div class="row justify-content-center desktop-width-1200">-->
+                        <!--<a class="mt-4" th:href="@{/scholarships/sign-up-scholarship}">-->
+                            <!--<img class="rounded" th:src="@{|https://i.imgur.com/YvUUrqo.jpg|}" alt="Sign up for $1000 CollegeHippo scholarship">-->
+                        <!--</a>-->
+                        <!--<a class="mt-4 ml-md-5" th:href="@{/scholarships/match-with-online-masters-graduate-programs}">-->
+                            <!--<img class="rounded" th:src="@{|https://i.imgur.com/22EdSRz.jpg|}" alt="Match me with Master’s Programs">-->
+                        <!--</a>-->
+                        <!--<a class="mt-4 ml-md-5" th:href="@{/scholarships/calculate-cost-graduate-program}">-->
+                            <!--<img class="rounded" th:src="@{|https://i.imgur.com/ME0bYeL.jpg|}" alt="Calculate cost of Master’s Degree">-->
+                        <!--</a>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="pattern bottom"></div>-->
+        <!--</section>-->
+
+        <!--<section class="section section-md py-2 py-md-0 bg-white">-->
+            <!--<div class="container">-->
+                    <!--<div class="row row-grid align-items-center">-->
+
+                    <!--<div class="col-12 col-lg-6">-->
+                            <!--<h2 class="font-weight-bolder mb-4">FAFSA for Graduate Students</h2>-->
+                            <!--<p class="lead mb-3 mb-lg-5">Find out the prerequisite, application process and how graduate school financial aid works.</p>-->
+                                <!--</div>-->
+
+                        <!--<div class="col-12 col-lg-6 mt-0 ml-lg-auto">-->
+                            <!--<img loading="lazy" class="rounded" th:src="@{/assets/img/pages/fafsa.jpg}" alt="Fafsa">-->
+                    <!--</div>-->
+
                 <!--</div>-->
             <!--</div>-->
-            <!--<div class="pattern bottom"></div>-->
-    <!--</section>-->
+        <!--</section>-->
 
-    <!--<section class="section section-md py-2 py-md-0 bg-white">-->
-        <!--<div class="container">-->
-                <!--<div class="row row-grid align-items-center">-->
+        @@include('./_footer.html', {
+        "path": "..",
+        "classes": "bg-primary text-white"
+        })
 
-                <!--<div class="col-12 col-lg-6">-->
-                        <!--<h2 class="font-weight-bolder mb-4">FAFSA for Graduate Students</h2>-->
-                        <!--<p class="lead mb-3 mb-lg-5">Find out the prerequisite, application process and how graduate school financial aid works.</p>-->
-                            <!--</div>-->
+    </main>
 
-                    <!--<div class="col-12 col-lg-6 mt-0 ml-lg-auto">-->
-                        <!--<img loading="lazy" class="rounded" th:src="@{/assets/img/pages/fafsa.jpg}" alt="Fafsa">-->
-                <!--</div>-->
-
-            <!--</div>-->
-        <!--</div>-->
-    <!--</section>-->
-
-    @@include('./_footer.html', {
-    "path": "..",
-    "classes": "bg-primary text-white"
+    @@include('./_scripts.html', {
+        "path": ".."
     })
-
-</main>
-
-@@include('./_scripts.html', {
-"path": ".."
-})
 
 </body>
 
