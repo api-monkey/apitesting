@@ -15,6 +15,7 @@
     <description>An all-in-one test automation solution</description>
     <properties>
         <java.version>11</java.version>
+        <log4j2.version>2.15.0</log4j2.version>
     </properties>
     <dependencies>
         <dependency>
@@ -110,7 +111,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20210307</version>
+            <version>20211205</version>
         </dependency>
 
         <dependency>
@@ -133,6 +134,13 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>

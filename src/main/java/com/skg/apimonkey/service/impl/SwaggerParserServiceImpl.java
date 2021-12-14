@@ -1,6 +1,9 @@
 package com.skg.apimonkey.service.impl;
 
+import com.skg.apimonkey.domain.data.ErrorMessageLog;
 import com.skg.apimonkey.domain.data.SwaggerData;
+import com.skg.apimonkey.domain.model.SwaggerJsonResult;
+import com.skg.apimonkey.repository.ErrorMessageLogRepository;
 import com.skg.apimonkey.repository.SwaggerDataRepository;
 import com.skg.apimonkey.service.SwaggerParserService;
 import io.swagger.parser.OpenAPIParser;
@@ -10,6 +13,7 @@ import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,18 +41,22 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
 
     @Autowired
     private SwaggerDataRepository swaggerDataRepository;
+    @Autowired
+    private ErrorMessageLogRepository errorMessageLogRepository;
 
     @Override
     public String getSwaggerDataHashId(String swaggerUrl) {
         String jsonUrl = swaggerUrl;
         String htmlBody;
+        SwaggerJsonResult resultPage = null;
         boolean updated = false;
 
         if (StringUtils.isNotEmpty(swaggerUrl) &&
                 !StringUtils.endsWithIgnoreCase(swaggerUrl, JSON_SUFFIX) &&
-                !isJson(downloadSwaggerJson(swaggerUrl))) {
+                !isJson(downloadSwaggerJson(swaggerUrl).getResultPage())) {
 
-            jsonUrl = getJsonUrlFromSwaggerPage(swaggerUrl);
+            resultPage = getJsonUrlFromSwaggerPage(swaggerUrl);
+            jsonUrl = resultPage.getJsonUrl();
         }
         jsonUrl = getCleanStartPage(jsonUrl);
 
@@ -58,7 +66,8 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
 
         } else {
 
-            htmlBody = downloadSwaggerJson(jsonUrl);
+            resultPage = downloadSwaggerJson(jsonUrl);
+            htmlBody = resultPage.getResultPage();
             updated = true;
         }
 
@@ -80,6 +89,16 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
                     new Date());
             swaggerData.setUpdatedDate(new Date());
             swaggerDataRepository.save(swaggerData);
+        }
+
+        if (resultPage != null && StringUtils.isNotEmpty(resultPage.getErrorMessage())) {
+            ErrorMessageLog errorLog = ErrorMessageLog.builder()
+                    .url(jsonUrl)
+                    .errorMessage(resultPage.getErrorMessage())
+                    .stackTrace(resultPage.getErrorTrace())
+                    .createdDate(new Date())
+                    .build();
+            errorMessageLogRepository.save(errorLog);
         }
 
         return swaggerData == null ? null : swaggerData.getHashId();
@@ -108,9 +127,9 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
         return result;
     }
 
-    private static String getJsonUrlFromSwaggerPage(String path) {
+    private static SwaggerJsonResult getJsonUrlFromSwaggerPage(String path) {
 
-        String result = null;
+        SwaggerJsonResult result = new SwaggerJsonResult();
 
         try {
 
@@ -135,10 +154,10 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
                         .orElse(null);
 
                 if(!StringUtils.containsIgnoreCase(endPart, "http")) {
-                    result = sourceUrl.getProtocol() + "://" + sourceUrl.getHost() + (StringUtils.startsWith(endPart, "/") ? "" : "/") + endPart;
+                    result.setJsonUrl(sourceUrl.getProtocol() + "://" + sourceUrl.getHost() + (StringUtils.startsWith(endPart, "/") ? "" : "/") + endPart);
 
                 } else {
-                    result = endPart;
+                    result.setJsonUrl(endPart);
                 }
 
             // looking url with json response
@@ -149,18 +168,19 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
                     String linkString = link.attr("abs:href");
                     if (StringUtils.isNotEmpty(linkString) && StringUtils.containsIgnoreCase(linkString, sourceUrl.getHost())) {
 
-                        String jsonStr = downloadSwaggerJson(linkString);
+                        SwaggerJsonResult jsonStr = downloadSwaggerJson(linkString);
 
-                        if(isJson(jsonStr)) {
-                            result = linkString;
+                        if(isJson(jsonStr.getResultPage())) {
+                            result.setJsonUrl(linkString);
                             break;
                         }
                     }
                 }
             }
 
-
         } catch (Exception e) {
+            result.setErrorMessage(ExceptionUtils.getRootCauseMessage(e));
+            result.setErrorTrace(ExceptionUtils.getStackTrace(e));
             log.error("Error crawling .json link from the page [{}]: ", path, e);
         }
 

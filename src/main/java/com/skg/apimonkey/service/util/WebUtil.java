@@ -1,12 +1,14 @@
 package com.skg.apimonkey.service.util;
 
 import com.skg.apimonkey.domain.model.ParametersDataCase;
+import com.skg.apimonkey.domain.model.SwaggerJsonResult;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -62,19 +64,23 @@ public class WebUtil {
         return url;
     }
 
-    public static String downloadSwaggerJson(String url) {
+    public static SwaggerJsonResult downloadSwaggerJson(String url) {
+        SwaggerJsonResult result = new SwaggerJsonResult();
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpResponse response = client.execute(new HttpGet(url));
             HttpEntity entity = response.getEntity();
-            String result = EntityUtils.toString(entity, "UTF-8");
+            String resultPage = EntityUtils.toString(entity, "UTF-8");
             client.close();
+            result.setResultPage(resultPage);
             return result;
 
         } catch (Exception e) {
+            result.setErrorMessage(ExceptionUtils.getRootCauseMessage(e));
+            result.setErrorTrace(ExceptionUtils.getStackTrace(e));
             log.error("Error downloading json from url", e);
         }
 
-        return null;
+        return result;
     }
 
     public static void setHeaderParamsToRequest(TestDataCase dataCase, HttpRequestBase request) {

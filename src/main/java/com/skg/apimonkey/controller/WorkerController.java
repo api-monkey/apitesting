@@ -3,12 +3,14 @@ package com.skg.apimonkey.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.skg.apimonkey.domain.data.ErrorMessageLog;
 import com.skg.apimonkey.domain.data.UserDataCase;
 import com.skg.apimonkey.domain.model.RequestType;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.domain.model.response.InputUrlResponse;
 import com.skg.apimonkey.domain.model.response.RunCaseRequest;
 import com.skg.apimonkey.domain.model.response.RunCaseResponse;
+import com.skg.apimonkey.repository.ErrorMessageLogRepository;
 import com.skg.apimonkey.repository.SwaggerDataRepository;
 import com.skg.apimonkey.repository.UserDataCaseRepository;
 import com.skg.apimonkey.service.SwaggerParserService;
@@ -18,6 +20,7 @@ import com.skg.apimonkey.service.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +43,8 @@ public class WorkerController {
     private UserDataCaseRepository userDataCaseRepository;
     @Autowired
     private SwaggerDataRepository swaggerDataRepository;
+    @Autowired
+    private ErrorMessageLogRepository errorMessageLogRepository;
 
     @GetMapping("/rest/parseSwaggerUrl")
     public InputUrlResponse parseSwaggerUrl(@RequestParam(value = "url") String url,
@@ -54,6 +59,14 @@ public class WorkerController {
         } catch (Exception e) {
             log.error("getSwaggerRestApi error: ", e);
             errorMessage = "Sorry we only support the REST API’s which have Swagger / Open APi definitions.";
+
+            ErrorMessageLog errorLog = ErrorMessageLog.builder()
+                    .url(url)
+                    .errorMessage(e.getMessage())
+                    .stackTrace(ExceptionUtils.getStackTrace(e))
+                    .createdDate(new Date())
+                    .build();
+            errorMessageLogRepository.save(errorLog);
         }
 
         return InputUrlResponse.builder()
