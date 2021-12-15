@@ -66,6 +66,11 @@ function addRunButtonEvents(runButton) {
             respText = parentDiv.find('.response-text');
         respText.fadeIn('fast');
 
+        // send event to google analytic
+        if (typeof runTestsEvent === 'function') {
+            runTestsEvent();
+        }
+
         runCases.each(function() {
 
             let runItem = $(this),
@@ -167,6 +172,11 @@ function addRunButtonEvents(runButton) {
 
 function addGenerateButtonEvents() {
     $('.generate-button').on('click', function() {
+
+        // send event to google analytic
+        if (typeof generateTestsEvent === 'function') {
+            generateTestsEvent();
+        }
 
         loadingStart();
         let button = $(this);

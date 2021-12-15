@@ -7,6 +7,11 @@ $(document).ready(function () {
         let urlValue = $('#swagger-url-id').val();
         let variantNumber = 4;
 
+        // send event to google analytic
+        if (typeof enterSwaggerUrlEvent === 'function') {
+            enterSwaggerUrlEvent();
+        }
+
         if(!urlValue) {
             showInvalidFeedback();
 
@@ -29,7 +34,7 @@ $(document).ready(function () {
                         window.location.href = '/run-tests?api=' + data.hashId;
 
                     } else {
-
+                        loadingStop();
                         showInvalidFeedback(data.errorMessage);
                     }
                 },
@@ -37,9 +42,9 @@ $(document).ready(function () {
                     showInvalidFeedback();
                     console.log(jqXHR.status);
                     console.log(exception);
+                    loadingStop();
                 },
                 complete: function() {
-                    loadingStop();
                 },
                 timeout: 60000
             });
