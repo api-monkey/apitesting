@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -20,15 +21,20 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     @Autowired
     private UserService userService;
     @Autowired
     DataSource dataSource;
 
+    public PasswordEncoder getEncoder() {
+        return encoder;
+    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        authenticationMgr.userDetailsService(userService).passwordEncoder(encoder);
+        authenticationMgr.userDetailsService(userService).passwordEncoder(getEncoder());
     }
 
     @Bean

@@ -1,4 +1,6 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <header class="header-global">
     <nav id="navbar-main" class="navbar navbar-main navbar-expand-lg @@classes headroom py-lg-2 px-lg-6">
         <div class="container">
@@ -37,12 +39,12 @@
                 </ul>
             </div>
             <div class="d-none d-lg-block">
-                <a th:href="@{/login}" class="btn btn-outline-white btn-docs animate-up-2 mr-3">
-                    Sign In
-                </a>
-                <a th:href="@{/sign-up}" class="btn btn-outline-white btn-docs animate-up-2">
-                    Sign Up
-                </a>
+                <div sec:authorize="not isAuthenticated()" class="d-none d-lg-block">
+                    <a th:href="@{/login}" class="btn btn-outline-white btn-docs animate-up-2">Sign in</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" class="d-none d-lg-block">
+                    <a th:href="@{/logout}" class="btn btn-outline-white btn-docs animate-up-2">Sign out</a>
+                </div>
             </div>
             <div class="d-flex d-lg-none align-items-center ml-auto">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">

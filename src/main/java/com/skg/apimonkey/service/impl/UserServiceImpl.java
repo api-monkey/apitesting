@@ -1,6 +1,10 @@
 package com.skg.apimonkey.service.impl;
 
+import com.skg.apimonkey.config.SecurityConfig;
 import com.skg.apimonkey.domain.user.User;
+import com.skg.apimonkey.domain.user.UserSignUp;
+import com.skg.apimonkey.domain.user.UserType;
+import com.skg.apimonkey.exception.UserAlreadyExistException;
 import com.skg.apimonkey.repository.UserRepository;
 import com.skg.apimonkey.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +17,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private SecurityConfig securityConfig;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -36,5 +43,28 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User getUserByLogin(String login) {
         return userRepository.getUserByLogin(login);
+    }
+
+    @Override
+    @Transactional
+    public User registerNewUserAccount(UserSignUp userDto) throws UserAlreadyExistException {
+
+        if (loginExist(userDto.getEmail())) {
+            throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
+        }
+
+        User user = User.builder()
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .login(userDto.getEmail())
+                .password(securityConfig.getEncoder().encode(userDto.getPassword()))
+                .type(UserType.ROLE_USER)
+                .created(new Date())
+                .build();
+        return userRepository.save(user);
+    }
+
+    private boolean loginExist(String email) {
+        return userRepository.getUserByLogin(email) != null;
     }
 }
