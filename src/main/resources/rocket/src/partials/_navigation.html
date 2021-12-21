@@ -40,7 +40,7 @@
             </div>
             <div class="d-none d-lg-block">
                 <div sec:authorize="not isAuthenticated()" class="d-none d-lg-block">
-                    <a th:href="@{/login}" class="btn btn-outline-white btn-docs animate-up-2">Sign in</a>
+                    <a th:href="@{/sign-in}" class="btn btn-outline-white btn-docs animate-up-2">Sign in</a>
                 </div>
                 <div sec:authorize="isAuthenticated()" class="d-none d-lg-block">
                     <a th:href="@{/logout}" class="btn btn-outline-white btn-docs animate-up-2">Sign out</a>

@@ -22,12 +22,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 import static com.skg.apimonkey.service.util.StringUtil.isJson;
 
@@ -45,6 +45,11 @@ public class WorkerController {
     private SwaggerDataRepository swaggerDataRepository;
     @Autowired
     private ErrorMessageLogRepository errorMessageLogRepository;
+
+    @GetMapping("/user")
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        return Collections.singletonMap("name", principal.getAttribute("name"));
+    }
 
     @GetMapping("/rest/parseSwaggerUrl")
     public InputUrlResponse parseSwaggerUrl(@RequestParam(value = "url") String url,
