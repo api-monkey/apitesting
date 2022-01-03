@@ -1,6 +1,7 @@
 package com.skg.apimonkey.config;
 
 import com.skg.apimonkey.service.UserService;
+import com.skg.apimonkey.service.oauth2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,20 +22,23 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     @Autowired
     private UserService userService;
     @Autowired
+    private OAuth2UserService oAuth2UserService;
+    @Autowired
+    private OAuth2OidcUserService oAuth2OidcUserService;
+    @Autowired
     DataSource dataSource;
-
-    public PasswordEncoder getEncoder() {
-        return encoder;
-    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception {
-        authenticationMgr.userDetailsService(userService).passwordEncoder(getEncoder());
+        authenticationMgr.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -54,9 +58,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                    .antMatchers("/**").permitAll()
+                    .antMatchers("/**")
+                        .permitAll()
 //                    .antMatchers("/index").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 //                    .antMatchers("/admin/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                    .antMatchers("/auth/**", "/oauth2/**")
+                        .permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .logout()
@@ -77,8 +84,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf().disable().authorizeRequests()
                 .and()
                     .rememberMe().tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(1209600);
-//                .and()
+                    .tokenValiditySeconds(1209600)
+                .and()
+                    .oauth2Login()
+                    .loginPage("/sign-in")
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService)
+                    .oidcUserService(oAuth2OidcUserService);
 //                    .csrf().disable().cors();
     }
 }

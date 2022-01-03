@@ -30,7 +30,7 @@ public class AuthenticationController {
         return "error/500";
     }
 
-    @GetMapping("/login")
+    @GetMapping(path = {"/login", "/sign-in"})
     public String login(Model model) {
         model.addAttribute("title", "Login");
         model.addAttribute("description", "Login page");

@@ -6,6 +6,7 @@
         "path": "..",
         "title": ""
     })
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sign_in.css}"/>
 </head>
 
 <body>
@@ -79,20 +80,20 @@
                                             id="login-submit" class="btn btn-block btn-primary">Sign in</button>
                                 </div>
                             </form>
-<!--                            <div class="mt-3 mb-4 text-center">-->
-<!--                                <span class="font-weight-normal">or login with</span>-->
-<!--                            </div>-->
-<!--                            <div class="btn-wrapper my-4 text-center">-->
+                            <div class="mt-3 mb-4 text-center">
+                                <span class="font-weight-normal">or login with</span>
+                            </div>
+                            <div class="btn-wrapper my-4 text-center">
 <!--                                <button class="btn btn-icon-only btn-twitter mr-2" type="button">-->
 <!--                                    <span><i class="fab fa-twitter"></i></span>-->
 <!--                                </button>-->
 <!--                                <button class="btn mr-2 btn-icon-only btn-pill btn-facebook" type="button">-->
 <!--                                    <span class="btn-inner-icon"><i class="fab fa-facebook-f"></i></span>-->
 <!--                                </button>-->
-<!--                                <button class="btn mr-2 btn-icon-only btn-pill btn-google" type="button">-->
-<!--                                    <span class="btn-inner-icon"><i class="fab fa-google"></i></span>-->
-<!--                                </button>-->
-<!--                            </div>-->
+                                <a th:href="@{/oauth2/authorization/google}" class="btn mr-2 btn-icon-only btn-pill btn-google" type="button">
+                                    <span class="btn-inner-icon social-btn"><i class="fab fa-google"></i></span>
+                                </a>
+                            </div>
                             <div class="d-block d-sm-flex justify-content-center align-items-center mt-4">
                                 <span class="font-weight-normal">
                                     Not registered?

@@ -111,6 +111,7 @@ gulp.task('serve', gulp.series('scss', 'html', 'index', 'assets', 'vendor', func
             paths.src.scss + '/rocket.scss',
             paths.src.scss + '/run_tests_page.scss',
             paths.src.scss + '/get_started_page.scss',
+            paths.src.scss + '/sign_in.scss',
             paths.src.scss + '/index.scss'
         ], gulp.series('clean:dist', 'copy:dist:css', 'copy:dist:html', 'copy:dist:html:index', 'copy:dist:assets', 'minify:css', 'minify:html', 'minify:html:index'));
     gulp.watch(
@@ -130,6 +131,7 @@ gulp.task('beautify:css', function () {
         paths.dev.css + '/rocket.css',
         paths.dev.css + '/run_tests_page.css',
         paths.dev.css + '/get_started_page.css',
+        paths.dev.css + '/sign_in.css',
         paths.dev.css + '/index.css'
     ])
         .pipe(cssbeautify())
@@ -142,6 +144,7 @@ gulp.task('minify:css', function () {
         paths.dist.css + '/rocket.css',
         paths.dist.css + '/run_tests_page.css',
         paths.dist.css + '/get_started_page.css',
+        paths.dist.css + '/sign_in.css',
         paths.dist.css + '/index.css'
     ])
         .pipe(cleanCss())
@@ -191,6 +194,7 @@ gulp.task('copy:dist:css', function () {
         paths.src.scss + '/rocket.scss',
         paths.src.scss + '/run_tests_page.scss',
         paths.src.scss + '/get_started_page.scss',
+        paths.src.scss + '/sign_in.scss',
         paths.src.scss + '/index.scss'
     ])
         .pipe(wait(500))
