@@ -43,7 +43,7 @@ public class ApiMonkeyController {
     public String homePage(Model model) {
 
         model.addAttribute("title", "APIMonkey");
-        model.addAttribute("description", "The No-code API testing solution");
+        model.addAttribute("description", "The no-code API testing solution");
         model.addAttribute("robots", "index");
 
         return "index";
