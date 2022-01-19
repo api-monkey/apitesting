@@ -63,7 +63,7 @@ public class WorkerController {
 
         } catch (Exception e) {
             log.error("getSwaggerRestApi error: ", e);
-            errorMessage = "Sorry we only support the REST API’s which have Swagger / Open APi definitions.";
+            errorMessage = "Sorry we only support the REST API’s which have Swagger / Open APi definitions. Example: https://petstore.swagger.io/v2/swagger.json";
 
             ErrorMessageLog errorLog = ErrorMessageLog.builder()
                     .url(url)

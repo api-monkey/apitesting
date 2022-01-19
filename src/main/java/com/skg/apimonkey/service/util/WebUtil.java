@@ -72,7 +72,6 @@ public class WebUtil {
             String resultPage = EntityUtils.toString(entity, "UTF-8");
             client.close();
             result.setResultPage(resultPage);
-            return result;
 
         } catch (Exception e) {
             result.setErrorMessage(ExceptionUtils.getRootCauseMessage(e));

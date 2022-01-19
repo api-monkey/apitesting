@@ -1,4 +1,4 @@
-﻿const defaultMessage = 'Sorry we only support the REST API’s which have Swagger / Open APi definitions.';
+﻿const defaultMessage = 'Sorry we only support the REST API’s which have Swagger / Open APi definitions. Example: https://petstore.swagger.io/v2/swagger.json';
 
 $(document).ready(function () {
 
