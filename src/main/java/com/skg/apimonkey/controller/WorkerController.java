@@ -151,4 +151,19 @@ public class WorkerController {
         }
         userDataCaseRepository.save(userDataCase);
     }
+
+    @GetMapping("/rest/contact-us-message")
+    public void contactUsMessage(@RequestParam(value = "firstName") String firstName,
+                                 @RequestParam(value = "lastName") String lastName,
+                                 @RequestParam(value = "email") String email,
+                                 @RequestParam(value = "message") String message,
+                                 @RequestParam(value = "phone", required = false) String phone) {
+
+       log.info(firstName);
+       log.info(lastName);
+       log.info(email);
+       log.info(message);
+       log.info(phone);
+       log.info("*");
+    }
 }

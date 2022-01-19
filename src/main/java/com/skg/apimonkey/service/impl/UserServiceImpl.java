@@ -10,9 +10,12 @@ import com.skg.apimonkey.exception.ResourceNotFoundException;
 import com.skg.apimonkey.exception.UserAlreadyExistException;
 import com.skg.apimonkey.repository.UserRepository;
 import com.skg.apimonkey.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -33,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private SecurityConfig securityConfig;
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }
@@ -66,6 +70,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User getAuthUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (isLoginUser()) {
+            try {
+                UserDetails userPrincipal = (UserDetails) auth.getPrincipal();
+                user = getUserByLogin(userPrincipal.getUsername()).orElse(null);
+            } catch (Exception e) {
+                log.error("Exception getAuthUser", e);
+            }
+        }
+        return user;
+    }
+
+    @Override
     @Transactional
     public User registerNewUserAccount(UserSignUp userDto) throws UserAlreadyExistException {
 
@@ -89,5 +109,10 @@ public class UserServiceImpl implements UserService {
 
     private boolean loginExist(String email) {
         return userRepository.getUserByLogin(email).isPresent();
+    }
+
+    public boolean isLoginUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String);
     }
 }

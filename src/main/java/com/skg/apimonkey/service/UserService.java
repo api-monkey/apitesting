@@ -14,6 +14,8 @@ public interface UserService extends UserDetailsService {
 
     User registerNewUserAccount(UserSignUp userSignUp) throws UserAlreadyExistException;
 
+    User getAuthUser();
+
     UserDetails loadUserById(Integer id);
 
     User save(User user);

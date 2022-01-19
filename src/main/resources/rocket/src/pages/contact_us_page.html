@@ -5,6 +5,7 @@
         "path": "..",
         "title": ""
     })
+    <link rel="stylesheet" type="text/css" th:href="@{/css/contact_us.css}"/>
 </head>
 
 <body>
@@ -18,34 +19,97 @@
             "path": ".."
         })
 
-        <section class="section-header pb-6 pb-lg-8 bg-primary text-white">
+        <section class="section-header bg-primary text-white pb-9 pb-lg-13 mb-4 mb-lg-6">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-12 col-lg-7">
-                        <h1 class="h1 display-1 font-weight-bolder mb-3">Contact us</h1>
-                    </div>
-                    <div class="col-12 col-lg-5 mt-4 mt-lg-0">
-                        <img th:src="@{/assets/img/pages/image_banner.png}" alt="APIMonkey"/>
+                    <div class="col-12 col-md-8 text-center">
+                        <h1 class="display-2 mb-3">Got a question?</h1>
+                        <p class="lead">Your feedback is valuable to us. If you have problems, want to request a feature, or report a bug, we’re more than happy to help</p>
                     </div>
                 </div>
             </div>
             <div class="pattern bottom"></div>
         </section>
+        <div class="section section-lg pt-0">
+            <div class="container mt-n8 mt-lg-n13 z-2">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <!-- Card -->
+                        <div class="card border-light shadow-soft p-2 p-md-4 p-lg-5">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group required">
+                                            <label class="form-label text-dark control-label" for="firstName">First Name</label>
+                                            <div class="invalid-feedback">Please, enter valid First Name</div>
+                                            <div class="input-group mb-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
+                                                </div>
+                                                <input class="form-control font-weight-bold" id="firstName" th:value="${firstName}" type="text" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group required">
+                                            <label class="form-label text-dark control-label" for="lastName">Last Name</label>
+                                            <div class="invalid-feedback">Please, enter valid Last Name</div>
+                                            <div class="input-group mb-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
+                                                </div>
+                                                <input class="form-control font-weight-bold" id="lastName" th:value="${lastName}" type="text" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group required">
+                                            <label class="form-label text-dark control-label" for="email">Email</label>
+                                            <div class="invalid-feedback">Please, enter valid Email</div>
+                                            <div class="input-group mb-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                </div>
+                                                <input class="form-control font-weight-bold" id="email" th:value="${email}" type="email" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label text-dark" for="phone">Phone Number</label>
+                                            <div class="input-group mb-4">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-phone-square-alt"></i></span>
+                                                </div>
+                                                <input class="form-control font-weight-bold" id="phone" type="number" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <div class="form-group required">
+                                            <label class="form-label text-dark control-label" for="message">How can we help you?</label>
+                                            <div class="invalid-feedback">Please, enter valid message</div>
+                                            <textarea id="message" class="form-control font-weight-bold" rows="8" required></textarea>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" id="send-message-submit" class="btn btn-secondary mt-4 animate-up-2"><span class="mr-2"><i class="fas fa-paper-plane"></i></span>Send Message</button>
+                                        </div>
 
-        <section class="section section-md py-2 py-md-0 bg-white">
-            <div class="container">
-                <div class="row row-grid align-items-center">
-                    <div class="col-12 col-lg-12">
-                        <h2 class="font-weight-bolder mb-4">Contact us</h2>
-                        <p class="lead mb-0">Contact us text</p>
+                                        <div id="message-sent-text" class="text-center d-none">
+                                            <h1 class="h3">Thank you! Your message has been sent.</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         @@include('./_footer.html', {
-        "path": "..",
-        "classes": "bg-primary text-white"
+            "path": "..",
+            "classes": "bg-primary text-white"
         })
 
     </main>
@@ -53,6 +117,7 @@
     @@include('./_scripts.html', {
         "path": ".."
     })
+    <script type="text/javascript" th:src="@{/assets/js/contact_us_page.js}"></script>
 
 </body>
 </html>

@@ -3,10 +3,12 @@ package com.skg.apimonkey.controller;
 import com.skg.apimonkey.domain.data.SwaggerData;
 import com.skg.apimonkey.domain.data.UserDataCase;
 import com.skg.apimonkey.domain.model.TestDataCase;
+import com.skg.apimonkey.domain.user.User;
 import com.skg.apimonkey.repository.SwaggerDataRepository;
 import com.skg.apimonkey.repository.UserDataCaseRepository;
 import com.skg.apimonkey.service.DataCreationService;
 import com.skg.apimonkey.service.SwaggerParserService;
+import com.skg.apimonkey.service.UserService;
 import com.skg.apimonkey.service.util.MappingUtil;
 import com.skg.apimonkey.service.util.WebUtil;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
@@ -38,6 +40,8 @@ public class ApiMonkeyController {
     private SwaggerDataRepository swaggerDataRepository;
     @Autowired
     private UserDataCaseRepository userDataCaseRepository;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -81,6 +85,11 @@ public class ApiMonkeyController {
 
     @GetMapping("/contact-us")
     public String contactUsPage(Model model) {
+
+        User user = userService.getAuthUser();
+        model.addAttribute("firstName", Objects.nonNull(user) ? user.getFirstName() : "");
+        model.addAttribute("lastName", Objects.nonNull(user) ? user.getLastName() : "");
+        model.addAttribute("email", Objects.nonNull(user) ? user.getLogin() : "");
 
         model.addAttribute("title", "Contact us");
         model.addAttribute("description", "Contact us page");
