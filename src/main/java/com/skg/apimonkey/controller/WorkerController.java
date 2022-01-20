@@ -13,6 +13,7 @@ import com.skg.apimonkey.domain.model.response.RunCaseResponse;
 import com.skg.apimonkey.repository.ErrorMessageLogRepository;
 import com.skg.apimonkey.repository.SwaggerDataRepository;
 import com.skg.apimonkey.repository.UserDataCaseRepository;
+import com.skg.apimonkey.service.EmailService;
 import com.skg.apimonkey.service.SwaggerParserService;
 import com.skg.apimonkey.service.impl.CaseRunnerManager;
 import com.skg.apimonkey.service.util.MappingUtil;
@@ -45,6 +46,8 @@ public class WorkerController {
     private SwaggerDataRepository swaggerDataRepository;
     @Autowired
     private ErrorMessageLogRepository errorMessageLogRepository;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
@@ -159,11 +162,12 @@ public class WorkerController {
                                  @RequestParam(value = "message") String message,
                                  @RequestParam(value = "phone", required = false) String phone) {
 
-       log.info(firstName);
-       log.info(lastName);
-       log.info(email);
-       log.info(message);
-       log.info(phone);
-       log.info("*");
+        String text = "<h3>Contact Us message from " + email + "</h3>" +
+                "<p>FirstName: " +  firstName + "</p>" +
+                "<p>LastName: " +  lastName + "</p>" +
+                "<p>Phone: " +  (phone == null ? "-" : phone) + "</p>" +
+                "<p>Message: </p>" +
+                "<p>" + message + "</p>";
+        emailService.sendSimpleMail(email, "Contact Us message from user", text);
     }
 }
