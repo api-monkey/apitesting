@@ -18,34 +18,38 @@
             "path": ".."
         })
 
-        <section class="section-header pb-6 pb-lg-8 bg-primary text-white">
+        <section class="section-header bg-primary text-white pb-9 pb-lg-13 mb-4 mb-lg-6">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-12 col-lg-7">
-                        <h1 class="h1 display-1 font-weight-bolder mb-3">Pricing</h1>
-                    </div>
-                    <div class="col-12 col-lg-5 mt-4 mt-lg-0">
-                        <img th:src="@{/assets/img/pages/image_banner.png}" alt="APIMonkey"/>
+                    <div class="col-12 col-md-8 text-center">
+                        <h1 class="display-2 mb-3">Pricing</h1>
                     </div>
                 </div>
             </div>
             <div class="pattern bottom"></div>
         </section>
-
-        <section class="section section-md py-2 py-md-0 bg-white">
-            <div class="container">
-                <div class="row row-grid align-items-center">
-                    <div class="col-12 col-lg-12">
-                        <h2 class="font-weight-bolder mb-4">Pricing</h2>
-                        <p class="lead mb-0">Pricing text</p>
+        <div class="section section-lg pt-0">
+            <div class="container mt-n8 mt-lg-n13 z-2">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <!-- Card -->
+                        <div class="card border-light shadow-soft p-2 p-md-4 p-lg-5">
+                            <div style="min-height: 300px;" class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p style="font-size: 26px;" class="lead">We are still in early beta and not sure how will we price our service</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         @@include('./_footer.html', {
-        "path": "..",
-        "classes": "bg-primary text-white"
+            "path": "..",
+            "classes": "bg-primary text-white"
         })
 
     </main>

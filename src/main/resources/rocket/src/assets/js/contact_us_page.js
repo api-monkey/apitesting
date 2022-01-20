@@ -28,6 +28,7 @@ $(document).ready(function () {
             }, 400);
         } else {
 
+            loadingStart();
             $('#email-warn-validate-message').hide();
             $.ajax({
                 url: '/rest/contact-us-message',
@@ -48,87 +49,11 @@ $(document).ready(function () {
                 complete: function() {
                     $('#send-message-submit').hide();
                     $('#message-sent-text').removeClass('d-none');
+                    loadingStop();
                 }
             });
         }
     });
-
-
-    $('#match-me-with-online-detailed-back').on('click', function (e) {
-        window.history.back();
-    });
-
-    let reportNeedRadio = $('#reportNeed');
-    let whatExactlyLookingForText = $('#whatExactlyLookingForText');
-    let appreciateResponse = $('#appreciateResponse');
-    let noAnswerSubmitButton = $('#no-answer-submit-button');
-    noAnswerSubmitButton.hide();
-    whatExactlyLookingForText.hide();
-    appreciateResponse.hide();
-
-    reportNeedRadio.change(function(){
-        let reportNeedVal = reportNeedRadio.find("input[type='radio']:checked").val();
-        if (reportNeedVal && reportNeedVal === 'yes') {
-
-            whatExactlyLookingForText.removeClass("required");
-            appreciateResponse.show();
-            whatExactlyLookingForText.hide();
-            noAnswerSubmitButton.hide();
-
-        } else {
-            whatExactlyLookingForText.show();
-            appreciateResponse.hide();
-            whatExactlyLookingForText.addClass("required");
-            noAnswerSubmitButton.show();
-        }
-    });
-
-    noAnswerSubmitButton.on('click', function (e) {
-
-        let offsetTop = offsetTopDef;
-        $('div.required').each(function (index) {
-
-            let textBlock = $(this).find("input[type='text'], textarea");
-            if (textBlock && textBlock.length > 0) {
-                let value = textBlock.val();
-                offsetTop = Math.min(validateInput(this, value), offsetTop);
-            }
-        });
-
-        if (offsetTop !== 10000) {
-            let scrollSize = offsetTop > 100 ? offsetTop - 100 : offsetTop;
-            $('html, body').animate({
-                scrollTop: scrollSize
-            }, 400);
-        } else {
-
-            let userDataId = $('#user-data-id').val(),
-                whatExactlyLookingForData = whatExactlyLookingForText.find("input[type='text'], textarea").val();
-            let orderDataStr = JSON.stringify({'userDataId': userDataId, 'whatExactlyLookingForData': whatExactlyLookingForData});
-
-            $.ajax({
-                url: '/content/scholarship/updateMatchMeOnlineData',
-                type: 'post',
-                data: orderDataStr,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Accept", "application/json");
-                    xhr.setRequestHeader("Content-Type", "application/json");
-                },
-                success: function (data) {
-                    // console.log('Order sent');
-                },
-                error: function (jqXHR, exception) {
-                    console.log(jqXHR.status);
-                    console.log(exception);
-                },
-            });
-
-            whatExactlyLookingForText.empty();
-            $( this ).html('');
-            $( this ).html('<p class="h3 font-weight-normal text-muted text-center mb-4">Thank you for answer!</p>');
-        }
-    });
-
 });
 
 function validateInput(element, value) {
@@ -162,4 +87,14 @@ function validateEmailInput(element, value) {
 function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
+}
+
+function loadingStart() {
+    $('.preloader').show();
+}
+
+function loadingStop(delay) {
+    setTimeout( function(){
+        $('.preloader').hide();
+    }, delay ? delay : 150);
 }
