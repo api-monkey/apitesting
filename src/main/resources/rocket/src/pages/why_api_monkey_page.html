@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     @@include('./_head.html', {
         "path": "..",
@@ -18,30 +18,50 @@
             "path": ".."
         })
 
-        <section class="section-header pb-6 pb-lg-8 bg-primary text-white">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-lg-7">
-                        <h1 class="h1 display-1 font-weight-bolder mb-3">Why API Monkey</h1>
-                    </div>
-                    <div class="col-12 col-lg-5 mt-4 mt-lg-0">
-                        <img th:src="@{/assets/img/pages/image_banner.png}" alt="APIMonkey"/>
+        <article>
+            <section class="section-header pb-7 pb-lg-10 bg-primary text-white">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-10 text-center">
+                            <h1 class="display-3 mb-0 px-lg-5">Why API Monkey</h1>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="pattern bottom"></div>
-        </section>
+                <div class="pattern bottom"></div>
+            </section>
+            <div class="section section-sm bg-white pt-5 text-black">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-8">
+                            <p>Developers' time is precious. Developers are expensive. They should not worry about writing or maintaining the tests.</p>
+                            <p>Business users provide the real data. Why shouldn't they manage the test data?</p>
+                            <p>API Monkey removes the complexities out of API testing and gives the control in the hand of the business users. API testing can be automated without writing a single line of code.</p>
+                            <p>All you need to come to the party is your API.</p>
 
-        <section class="section section-md py-2 py-md-0 bg-white">
-            <div class="container">
-                <div class="row row-grid align-items-center">
-                    <div class="col-12 col-lg-12">
-                        <h2 class="font-weight-bolder mb-4">Why API Monkey?</h2>
-                        <p class="lead mb-0">Why API Monkey text</p>
+                            <h1>APIMonkey is a self service, no-code, API automation testing platform</h1>
+                            <p>Why did we build API Monkey?</p>
+                            <p>APIMonkey was built from our own pain points when we were writing the REST API’s for over the top of our applications. The developer will create the API’s and will create the mock test or integration tests. Nice. But how about non technical users? How will they test the API’s? How will business users verify if the API works as expected?</p>
+                            <p>Well how do you make sure after every build, your api’s are not broken and are working as expected? Developers or Test engineer will create the automated test cases for the APis using Karate or Cucumber.</p>
+                            <p class="font-weight-bold">Disadvantages</p>
+                            <ol>
+                                <li>Test automation frameworks are developer centric which means developer/test engineer has to write and maintain the test cases and data.</li>
+                                <li>Code need to be written for functional and negative test cases.</li>
+                                <li>Developer has to think of the mock test data which might not be even close to the actual data.</li>
+                                <li>Configure the test cases to run on jenkins or some other build server.</li>
+                                <li>Pick a reporting framework to display reporting results.</li>
+                                <li>Maintenance.</li>
+                            </ol>
+                            <p>Since test engineers and developers were writing the test cases and maintaining it, our business users never actually could feel 100% confident about the APis. They still tested the APIs manually after every release.</p>
+                            <p>This led me to start thinking, what if you could create the test data and run the tests by pointing to the API’s docs and not depend on the developer or test engineer to create the data?</p>
+                            <p>What if a non-tech user can manage the tests data?</p>
+                            <p>Why can’t we run the tests on the cloud on a continuous basis?</p>
+                            <p>And this gave birth to the APIMonkey</p>
+                            <p>We are in early beta. If you are using the API monkey.  Don’t forget to send us some feedback.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </article>
 
         @@include('./_footer.html', {
         "path": "..",
