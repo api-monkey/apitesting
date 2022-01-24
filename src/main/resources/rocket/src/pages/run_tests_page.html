@@ -151,7 +151,6 @@
 
                                     </th:block>
 
-
                                 </div>
 
                                 <button type="button" class="generate-button btn btn-default width-220 m-2">Generate tests</button>
@@ -161,23 +160,19 @@
                         </div>
                     </div>
 
-
                 </th:block>
-
             </div>
-
-
         </div>
 
-        @@include('./_footer_liner.html', {
-        "path": "..",
-        "classes": "bg-primary text-white"
+        @@include('./_footer.html', {
+            "path": "..",
+            "classes": "bg-primary text-white"
         })
 
     </main>
 
     @@include('./_scripts.html', {
-    "path": "../.."
+        "path": "../.."
     })
 
     <script type="text/javascript" th:src="@{/assets/js/run_tests_page.js}"></script>
