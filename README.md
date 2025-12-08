@@ -61,3 +61,56 @@ java -jar application.jar
 -DDB_PASSWORD=12345678
 -DDB_URL=jdbc:mysql://localhost:3306/api_monkey?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
 ```
+
+## 📄 License
+
+ApiMonkey is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+
+This means:
+
+- You are free to use, modify, and distribute ApiMonkey.
+- If you run a modified version **as a hosted service or over a network**, you must also release your modified source code under AGPL-3.0.
+- Any derivative works must remain open-source under the same license.
+
+For full details, see the [LICENSE](./LICENSE) file.
+
+---
+
+## 🤝 Contributing to ApiMonkey
+
+We welcome contributions! Before submitting code, please read and agree to our **Contributor License Agreement (CLA)**:
+
+👉 **[View the CLA](./CLA-individual.md)**
+
+All pull requests require signing the CLA. If using our CLA bot, you will be prompted automatically during your first contribution.
+
+### Contribution Guidelines
+
+1. **Fork** the repository and create a new branch for your changes.  
+2. Make sure your code follows project structure and style conventions.  
+3. Add or update tests when applicable.  
+4. Submit a **pull request** with a clear description of the change.  
+5. Ensure you have signed the CLA when prompted.
+
+---
+
+## 📬 Support & Contact
+
+If you encounter issues, please open a GitHub Issue.  
+For security-related disclosures, please email: **[apimonkey9 [] gmail.com]**
+
+---
+
+## ⭐ Why AGPL?
+
+The AGPL license ensures that:
+
+- ApiMonkey remains free and open-source.
+- Improvements made by others in hosted environments (SaaS, internal tools) must also be shared.
+- No one can take ApiMonkey, host it as a competing API service, and keep their modifications proprietary.
+
+This aligns with our mission to keep the tool open while preventing commercial exploitation without contribution.
+
+---
+
+Thank you for using and contributing to ApiMonkey!
