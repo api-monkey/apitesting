@@ -1,6 +1,6 @@
 # ApiMonkey Individual Contributor License Agreement (CLA)
 
-**Version 1.0 – [Replace with Date]**
+**Version 1.0 – [12/07/2025]**
 
 Thank you for your interest in contributing to **ApiMonkey** (the “Project”).  
 This Individual Contributor License Agreement (“Agreement”) clarifies how intellectual property rights to your contributions are handled.
