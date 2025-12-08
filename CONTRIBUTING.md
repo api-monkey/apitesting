@@ -12,7 +12,9 @@ Before submitting any code, you must agree to the **ApiMonkey Contributor Licens
 
 👉 Read it here: [CLA-individual.md](./CLA-individual.md)
 
-All pull requests will require CLA acceptance. If a CLA bot is enabled, it will prompt you automatically.
+All pull requests are checked by our CLA bot (**CLA Assistant Lite**).  
+On your first contribution, you will be prompted to sign the CLA via a GitHub link.  
+You only need to sign once.
 
 ---
 
