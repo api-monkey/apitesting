@@ -1,7 +1,8 @@
 package com.skg.apimonkey.config;
 
 import com.skg.apimonkey.service.UserService;
-import com.skg.apimonkey.service.oauth2.*;
+import com.skg.apimonkey.service.oauth2.OAuth2OidcUserService;
+import com.skg.apimonkey.service.oauth2.OAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,39 +59,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                    .antMatchers("/**")
-                        .permitAll()
+                .antMatchers("/**")
+                .permitAll()
 //                    .antMatchers("/index").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 //                    .antMatchers("/admin/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-                    .antMatchers("/auth/**", "/oauth2/**")
-                        .permitAll()
-                    .anyRequest().authenticated()
+                .antMatchers("/auth/**", "/oauth2/**")
+                .permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .logout()
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll()
+                .logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
                 .and()
-                    .formLogin().successHandler(savedRequestAwareAuthenticationSuccessHandler())
-                    .defaultSuccessUrl("/")
-                    .failureUrl("/login?error")
-                    .loginPage("/login")
-                    .permitAll()
+                .formLogin().successHandler(savedRequestAwareAuthenticationSuccessHandler())
+                .defaultSuccessUrl("/")
+                .failureUrl("/login?error")
+                .loginPage("/login")
+                .permitAll()
                 .and()
-                    .exceptionHandling().accessDeniedPage("/access-denied")
+                .exceptionHandling().accessDeniedPage("/access-denied")
                 .and()
-                    .csrf().disable().authorizeRequests()
+                .csrf().disable().authorizeRequests()
                 .and()
-                    .rememberMe().tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(1209600)
+                .rememberMe().tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(1209600)
                 .and()
-                    .oauth2Login()
-                    .loginPage("/sign-in")
-                    .userInfoEndpoint()
-                    .userService(oAuth2UserService)
-                    .oidcUserService(oAuth2OidcUserService);
+                .oauth2Login()
+                .loginPage("/sign-in")
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .oidcUserService(oAuth2OidcUserService);
 //                    .csrf().disable().cors();
     }
 }
