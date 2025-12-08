@@ -17,7 +17,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,9 +100,7 @@ public class ApiMonkeyController {
     }
 
     @GetMapping("/get-started")
-    public String getStartedPage(Model model,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response) {
+    public String getStartedPage(Model model) {
 
         model.addAttribute("title", "Get started");
         model.addAttribute("description", "Get started with testing your API's");
@@ -136,7 +135,7 @@ public class ApiMonkeyController {
             try {
                 cases = dataCreationService.generateTestDataCases(result, variantNumber);
                 for (int i = 0; i < cases.size(); i++) {
-                    if(casesFromDatabase.containsKey(cases.get(i).getDataId())) {
+                    if (casesFromDatabase.containsKey(cases.get(i).getDataId())) {
                         cases.set(i, casesFromDatabase.get(cases.get(i).getDataId()));
                     }
                 }
