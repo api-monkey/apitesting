@@ -145,7 +145,6 @@ public class ApiMonkeyController {
             }
 
         } else {
-
             return WebUtil.response404(response);
         }
 
