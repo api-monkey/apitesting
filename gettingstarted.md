@@ -1,5 +1,4 @@
 
-
 ## Getting started 
 
 To get started, you need a public facing API with swagger docs. Point to the API docs and the magic starts to happen.
