@@ -1,66 +1,75 @@
-# API Monkey 
-API Monkey is a simple, easy to use no-code test automation platform for REST API's. If you have a public facing API's, you can use APIMonkey to create and run test cases for you, on the cloud. 
+# 🐒 API Monkey
+**Self-service, no-code API testing for modern teams**
 
--- attach a screen shot of test cases with data and example
+API Monkey is an open-source platform that simplifies **API testing, collaboration, and quality assurance** — without writing boilerplate test code or standing up complex infrastructure.
 
-## How does it work?
+## The Problem
 
-To get started, you need a public facing API with swagger docs. Point to the API docs and the magic starts to happen.
+Teams build APIs faster than ever, but testing them is still hard.
 
+To properly test APIs, organizations typically need:
 
-This project is licensed under the AGPL-3.0. It is free to use, modify, and self-host for both personal and organizational use. Contributions are welcome and encouraged.”
+- QA engineers to write and maintain test code
+- Load test engineers to design performance tests
+- Security specialists to validate API security
+- CI/CD pipelines, test data, reporting frameworks, and load infrastructure
 
-# Database Configuration
+This leads to **high cost, slow feedback, and operational complexity**.
 
-## Prerequisites
+---
 
-Before running the Spring Boot application, ensure that:
+## Swagger / OpenAPI–Driven Testing (Zero Setup)
 
-1. MySQL database server is installed and running
-2. An empty database schema named `api_monkey` is created
+API Monkey can read your **Swagger / OpenAPI (2.0 / 3.x) definitions** and get you started instantly.
 
-### Creating the Database Schema
+When you import your API specification, API Monkey automatically:
 
-```sql
-CREATE DATABASE api_monkey;
-```
+- Discovers all API endpoints
+- Understands request and response schemas
+- **Generates realistic test data from schema definitions**
+- Creates automated functional test cases (positive and negative)
+- Organizes everything into a reusable test collection
 
-### Running the Application
-#### Option 1: Using Java System Properties
+There is **no need to manually create datasets, mock payloads, or write test code**.  
+API Monkey handles endpoint discovery, test creation, and data generation for you.
 
-```Bash
-java -jar application.jar \
--DDB_USERNAME=root \
--DDB_PASSWORD=12345678 \
--DDB_URL=jdbc:mysql://localhost:3306/api_monkey?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
-```
-### Option 2: Using Environment Variables
-#### Linux/MacOS:
-```Bash
-export DB_USERNAME=root
-export DB_PASSWORD=12345678
-export DB_URL="jdbc:mysql://localhost:3306/api_monkey?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8"
+### Built for Collaboration
 
-java -jar application.jar
-```
+Once the test collection is created, you can:
 
-### Windows (CMD):
-```cmd
-set DB_USERNAME=root
-set DB_PASSWORD=12345678
-set DB_URL=jdbc:mysql://localhost:3306/api_monkey?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
+- Share collections across teams
+- Invite users to collaborate
+- Allow developers, QA, and business users to run tests
+- Maintain a single, contract-driven source of truth
 
-java -jar application.jar
-```
+### Why This Matters
 
-### Option 3: Using IDE (IntelliJ IDEA / Eclipse)
-#### Add the following VM options in your run configuration:
+- Zero-configuration onboarding for existing APIs
+- Eliminates boilerplate test and data setup
+- Keeps tests aligned with evolving API contracts
+- Enables self-service testing for non-programmers
+- Speeds up feedback across product, engineering, and QA
 
-```text
--DDB_USERNAME=root
--DDB_PASSWORD=12345678
--DDB_URL=jdbc:mysql://localhost:3306/api_monkey?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
-```
+If you already have Swagger, API Monkey can turn it into **test cases, test data, and shared workflows — automatically**.
+
+---
+
+## How is API Monkey Different
+
+- **Open Source** – Run locally, on-prem, or in your own cloud
+- **No Code** – Designed for developers *and* non-developers
+- **Self Service** – Reduce dependency on specialized testing roles
+- **No Sharing Restrictions** – No SaaS lock-in, no licensing limits
+
+---
+
+## Getting Started
+
+New to API Monkey?
+
+👉 **[Get started here](gettingstarted.md)** — installation, Swagger import, configuration, and developer workflows.
+
+---
 
 ## 📄 License
 
