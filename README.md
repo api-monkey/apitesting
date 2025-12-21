@@ -54,7 +54,7 @@ If you already have Swagger, API Monkey can turn it into **test cases, test data
 
 ---
 
-## How is API Monkey Different
+## How is API Monkey Different?
 
 - **Open Source** – Run locally, on-prem, or in your own cloud
 - **No Code** – Designed for developers *and* non-developers
@@ -67,7 +67,7 @@ If you already have Swagger, API Monkey can turn it into **test cases, test data
 
 New to API Monkey?
 
-👉 **[Get started here](gettingstarted.md)** — installation, Swagger import, configuration, and developer workflows.
+👉 **[Get started here](./gettingstarted.md)** — installation, Swagger import, configuration, and developer workflows.
 
 ---
 
@@ -81,7 +81,7 @@ This means:
 - If you run a modified version **as a hosted service or over a network**, you must also release your modified source code under AGPL-3.0.
 - Any derivative works must remain open-source under the same license.
 
-For full details, see the [LICENSE](./LICENSE) file.
+For full details, see the [LICENSE](./LICENSE.md) file.
 
 ---
 
