@@ -1,6 +1,5 @@
 package com.skg.apimonkey.service.impl;
 
-import com.skg.apimonkey.config.SecurityConfig;
 import com.skg.apimonkey.domain.user.User;
 import com.skg.apimonkey.domain.user.UserSignUp;
 import com.skg.apimonkey.domain.user.UserType;
@@ -10,14 +9,15 @@ import com.skg.apimonkey.exception.ResourceNotFoundException;
 import com.skg.apimonkey.exception.UserAlreadyExistException;
 import com.skg.apimonkey.repository.UserRepository;
 import com.skg.apimonkey.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +29,11 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SecurityConfig securityConfig;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -48,9 +47,9 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> user = userRepository.getUserByLoginAndProvider(login, AuthProvider.local);
         UserDetails userDetails = null;
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             GrantedAuthority authority = new SimpleGrantedAuthority(user.get().getType().name());
-            userDetails = (UserDetails)new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(), Arrays.asList(authority));
+            userDetails = (UserDetails) new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(), Arrays.asList(authority));
         }
         return userDetails;
     }
@@ -99,7 +98,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setLogin(userDto.getEmail());
-        user.setPassword(securityConfig.passwordEncoder().encode(userDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setType(UserType.ROLE_USER);
         user.setProvider(AuthProvider.local);
         user.setEmailVerified(userOpt.isPresent());

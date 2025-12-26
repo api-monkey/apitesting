@@ -1,13 +1,12 @@
 package com.skg.apimonkey.domain.user;
 
 import com.skg.apimonkey.domain.user.auth2.AuthProvider;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -43,7 +42,6 @@ public class User implements Serializable {
     @Column(name = "IMAGE_URL")
     private String imageUrl;
     @Column(name = "EMAIL_VERIFIED")
-    @Type(type="org.hibernate.type.NumericBooleanType")
     private boolean emailVerified = false;
     @Column(name = "CREATED")
     private Date created;

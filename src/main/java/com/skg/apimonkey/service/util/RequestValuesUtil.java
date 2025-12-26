@@ -1,6 +1,7 @@
 package com.skg.apimonkey.service.util;
 
-import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -36,7 +37,7 @@ public class RequestValuesUtil {
 
     public static Object getValueByType(Schema schema, int variantNumber) {
 
-        if(Objects.isNull(schema) || StringUtils.isEmpty(schema.getType())) {
+        if (Objects.isNull(schema) || StringUtils.isEmpty(schema.getType())) {
             log.warn("Error creating value from scheme type!");
             return "";
         }
@@ -49,10 +50,10 @@ public class RequestValuesUtil {
                 if (StringUtils.equalsIgnoreCase(schema.getFormat(), EMAIL)) {
                     result = getEmailVariant(schema, variantNumber);
 
-                } else if(StringUtils.equalsIgnoreCase(schema.getFormat(), DATETIME)) {
+                } else if (StringUtils.equalsIgnoreCase(schema.getFormat(), DATETIME)) {
                     result = getDateTimeVariant(schema, variantNumber, DATETIME);
 
-                } else if(StringUtils.equalsIgnoreCase(schema.getFormat(), DATE)) {
+                } else if (StringUtils.equalsIgnoreCase(schema.getFormat(), DATE)) {
                     result = getDateTimeVariant(schema, variantNumber, DATE);
 
                 } else {

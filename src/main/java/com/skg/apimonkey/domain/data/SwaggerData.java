@@ -1,8 +1,8 @@
 package com.skg.apimonkey.domain.data;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import java.util.Date;
 @Table(name = "swagger_data")
 public class SwaggerData implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
 
@@ -27,9 +27,9 @@ public class SwaggerData implements Serializable {
     @Column(name = "PAGE_CONTENT", columnDefinition = "LONGTEXT")
     private String pageContent;
 
-    @Column(name="UPDATED_DATE")
+    @Column(name = "UPDATED_DATE")
     private Date updatedDate;
 
-    @Column(name="CREATED_DATE")
+    @Column(name = "CREATED_DATE")
     private Date createdDate;
 }

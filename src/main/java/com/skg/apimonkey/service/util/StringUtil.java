@@ -18,7 +18,7 @@ import java.util.Objects;
 public class StringUtil {
 
     public static boolean isJson(String text) {
-        if(StringUtils.isEmpty(text)) return false;
+        if (StringUtils.isEmpty(text)) return false;
         try {
             new JSONObject(text);
 
@@ -34,7 +34,7 @@ public class StringUtil {
 
     public static String generateDataId(RequestType requestType, String pathName) {
 
-        if(requestType != null && StringUtils.isNotEmpty(pathName)) {
+        if (requestType != null && StringUtils.isNotEmpty(pathName)) {
             return (requestType.name() + pathName)
                     .toLowerCase()
                     .replaceAll("[^a-z0-9 -]", " ")
@@ -44,7 +44,7 @@ public class StringUtil {
     }
 
     public static String beautify(Object object) throws JsonProcessingException {
-        if(Objects.nonNull(object)) {
+        if (Objects.nonNull(object)) {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             return objectMapper.writeValueAsString(object);
@@ -53,7 +53,7 @@ public class StringUtil {
     }
 
     public static String beautify(String string) throws JsonProcessingException {
-        if(Objects.nonNull(string)) {
+        if (Objects.nonNull(string)) {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             return objectMapper.writeValueAsString(objectMapper.readValue(string, HashMap.class));

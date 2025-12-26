@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +46,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
 
     private void updateWithTestCases(TestDataCase dataCase, OpenAPI openApi, Integer variantNumber) {
 
-        if(CollectionUtils.isEmpty(openApi.getServers())) {
+        if (CollectionUtils.isEmpty(openApi.getServers())) {
             log.warn("Server url not found");
             dataCase.setErrorMessage("Server url not found");
             dataCase.setBroken(true);
@@ -75,16 +77,16 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
 
         endpoints.forEach((k, v) -> {
 
-            if(Objects.nonNull(v.getGet())) {
+            if (Objects.nonNull(v.getGet())) {
                 dataCaseList.add(createDataCase(k, RequestType.GET, v));
             }
-            if(Objects.nonNull(v.getPut())) {
+            if (Objects.nonNull(v.getPut())) {
                 dataCaseList.add(createDataCase(k, RequestType.PUT, v));
             }
-            if(Objects.nonNull(v.getPost())) {
+            if (Objects.nonNull(v.getPost())) {
                 dataCaseList.add(createDataCase(k, RequestType.POST, v));
             }
-            if(Objects.nonNull(v.getDelete())) {
+            if (Objects.nonNull(v.getDelete())) {
                 dataCaseList.add(createDataCase(k, RequestType.DELETE, v));
             }
 

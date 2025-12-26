@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import static com.skg.apimonkey.service.util.WebUtil.setHeaderParamsToRequest;
 
-
 @Service
 @Slf4j
 public class PostCaseRunnerServiceImpl implements CaseRunnerService {
@@ -39,7 +38,7 @@ public class PostCaseRunnerServiceImpl implements CaseRunnerService {
         HttpPost request = new HttpPost(dataCase.getServerApiPathes().get(0) + dataCase.getMethodName());
         request.addHeader("Content-Type", dataCase.getContentType());
 
-        if(CollectionUtils.isNotEmpty(dataCase.getAuthHeaders())) {
+        if (CollectionUtils.isNotEmpty(dataCase.getAuthHeaders())) {
             dataCase.getAuthHeaders().forEach(i -> {
                 request.addHeader(i.getKey(), i.getValue());
             });
@@ -51,7 +50,7 @@ public class PostCaseRunnerServiceImpl implements CaseRunnerService {
 
         log.info("--> {} request body: {}, headers: {}", request, json, request.getAllHeaders());
 
-        if(!StringUtils.equalsIgnoreCase(json, "{}")) {
+        if (!StringUtils.equalsIgnoreCase(json, "{}")) {
             StringEntity entity = new StringEntity(json, "UTF-8");
             request.setEntity(entity);
             entity.setContentEncoding("UTF-8");

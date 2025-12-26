@@ -2,28 +2,23 @@ package com.skg.apimonkey.service.impl;
 
 import com.skg.apimonkey.domain.model.TestDataCase;
 import com.skg.apimonkey.service.util.Response;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CaseRunnerManager {
 
     private final PostCaseRunnerServiceImpl postCaseRunnerService;
     private final GetCaseRunnerServiceImpl getCaseRunnerService;
 
-    @Autowired
-    public CaseRunnerManager(PostCaseRunnerServiceImpl postCaseRunnerService, GetCaseRunnerServiceImpl getCaseRunnerService) {
-        this.postCaseRunnerService = postCaseRunnerService;
-        this.getCaseRunnerService = getCaseRunnerService;
-    }
-
     public Response runDataCase(TestDataCase dataCase) {
 
-        if(Objects.isNull(dataCase) || Objects.isNull(dataCase.getRequestType())) {
+        if (Objects.isNull(dataCase) || Objects.isNull(dataCase.getRequestType())) {
             log.warn("Test data case is null or request method not defined!");
         }
 
