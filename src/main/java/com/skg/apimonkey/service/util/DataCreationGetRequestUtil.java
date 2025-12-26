@@ -5,14 +5,16 @@ import com.skg.apimonkey.domain.model.ParametersDataCase;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.skg.apimonkey.service.util.RequestValuesUtil.getInHeadParameters;
@@ -72,7 +74,7 @@ public class DataCreationGetRequestUtil {
 
             String modifiedQuery = query;
 
-            for (Parameter param: parameters) {
+            for (Parameter param : parameters) {
 
                 ParameterItem parameterItem = new ParameterItem();
                 parameterItem.setName(param.getName());
@@ -89,7 +91,7 @@ public class DataCreationGetRequestUtil {
                 parameterItem.setRequired(param.getRequired() != null && param.getRequired());
                 parameterItem.setValue(value);
 
-                if(StringUtils.equalsIgnoreCase(param.getIn(), "path")) {
+                if (StringUtils.equalsIgnoreCase(param.getIn(), "path")) {
                     modifiedQuery = modifiedQuery.replaceAll("\\{" + param.getName() + "}", value);
                     parameterItem.setInPath(true);
                 }

@@ -8,6 +8,7 @@ import com.skg.apimonkey.repository.SwaggerDataRepository;
 import com.skg.apimonkey.service.SwaggerParserService;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
@@ -19,7 +20,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
@@ -35,14 +35,13 @@ import static com.skg.apimonkey.service.util.WebUtil.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SwaggerParserServiceImpl implements SwaggerParserService {
 
     private static final String JSON_SUFFIX = ".json";
 
-    @Autowired
-    private SwaggerDataRepository swaggerDataRepository;
-    @Autowired
-    private ErrorMessageLogRepository errorMessageLogRepository;
+    private final SwaggerDataRepository swaggerDataRepository;
+    private final ErrorMessageLogRepository errorMessageLogRepository;
 
     @Override
     public String getSwaggerDataHashId(String swaggerUrl) {
@@ -73,7 +72,7 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
 
         boolean isExist = swaggerData != null;
 
-        if(updated && StringUtils.isNotEmpty(htmlBody)) {
+        if (updated && StringUtils.isNotEmpty(htmlBody)) {
 
             swaggerData = isExist ?
                     swaggerData :
@@ -137,7 +136,7 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
             Document doc = Jsoup.parse(new URL(path), 30000);
             List<String> list = new ArrayList<>();
             Matcher matcher = Pattern.compile("[\"'](.*.json)[\"']", Pattern.CASE_INSENSITIVE).matcher(doc.html());
-            while (matcher.find()){
+            while (matcher.find()) {
                 list.add(matcher.group());
             }
 
@@ -153,24 +152,24 @@ public class SwaggerParserServiceImpl implements SwaggerParserService {
                         .findFirst()
                         .orElse(null);
 
-                if(!StringUtils.containsIgnoreCase(endPart, "http")) {
+                if (!StringUtils.containsIgnoreCase(endPart, "http")) {
                     result.setJsonUrl(sourceUrl.getProtocol() + "://" + sourceUrl.getHost() + (StringUtils.startsWith(endPart, "/") ? "" : "/") + endPart);
 
                 } else {
                     result.setJsonUrl(endPart);
                 }
 
-            // looking url with json response
+                // looking url with json response
             } else {
 
                 Elements links = doc.select("a");
-                for (Element link: links) {
+                for (Element link : links) {
                     String linkString = link.attr("abs:href");
                     if (StringUtils.isNotEmpty(linkString) && StringUtils.containsIgnoreCase(linkString, sourceUrl.getHost())) {
 
                         SwaggerJsonResult jsonStr = downloadSwaggerJson(linkString);
 
-                        if(isJson(jsonStr.getResultPage())) {
+                        if (isJson(jsonStr.getResultPage())) {
                             result.setJsonUrl(linkString);
                             break;
                         }

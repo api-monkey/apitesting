@@ -1,12 +1,12 @@
 package com.skg.apimonkey.domain.data;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,7 +19,7 @@ import java.util.Date;
 @Table(name = "error_messages_log")
 public class ErrorMessageLog implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
 
@@ -35,6 +35,6 @@ public class ErrorMessageLog implements Serializable {
     @Column(name = "STACK_TRACE", columnDefinition = "LONGTEXT")
     private String stackTrace;
 
-    @Column(name="CREATED_DATE")
+    @Column(name = "CREATED_DATE")
     private Date createdDate;
 }

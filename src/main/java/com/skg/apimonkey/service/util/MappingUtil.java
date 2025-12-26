@@ -15,7 +15,7 @@ public class MappingUtil {
 
     public static TestDataCase toTestDataCase(UserDataCase userDataCase) {
         TestDataCase testDataCase = null;
-        if(userDataCase != null) {
+        if (userDataCase != null) {
             try {
                 testDataCase = objectMapper.readValue(userDataCase.getDataCaseContent(), TestDataCase.class);
             } catch (JsonProcessingException e) {
@@ -27,7 +27,7 @@ public class MappingUtil {
 
     public static UserDataCase toUserDataCase(TestDataCase testDataCase) {
         UserDataCase userDataCase = null;
-        if(testDataCase != null) {
+        if (testDataCase != null) {
 
             userDataCase = new UserDataCase();
             userDataCase.setDataId(testDataCase.getDataId());

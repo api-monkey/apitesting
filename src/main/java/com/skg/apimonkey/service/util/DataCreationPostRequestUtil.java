@@ -6,7 +6,10 @@ import com.skg.apimonkey.domain.model.TestDataCase;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.servers.Server;
@@ -43,12 +46,12 @@ public class DataCreationPostRequestUtil {
         RequestBody requestBody = null;
         List<Parameter> inHeaderParameters = null;
 
-        if(requestType.equals(RequestType.POST)) {
+        if (requestType.equals(RequestType.POST)) {
             requestBody = pathItem.getPost().getRequestBody();
             inHeaderParameters = getInHeadParameters(pathItem.getPost().getParameters());
             dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
         }
-        if(requestType.equals(RequestType.PUT)) {
+        if (requestType.equals(RequestType.PUT)) {
             requestBody = pathItem.getPut().getRequestBody();
             inHeaderParameters = getInHeadParameters(pathItem.getPut().getParameters());
             dataCase.setSummary(StringUtils.isEmpty(pathItem.getPut().getSummary()) ? pathItem.getPut().getDescription() : pathItem.getPut().getSummary());
@@ -60,7 +63,7 @@ public class DataCreationPostRequestUtil {
                 .map(Server::getUrl)
                 .collect(Collectors.toList()));
 
-        if ( Objects.isNull(requestBody) ) {
+        if (Objects.isNull(requestBody)) {
             log.warn("RequestBody empty for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
             dataCase.setErrorMessage(String.format("RequestBody empty for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
             return;
@@ -68,7 +71,7 @@ public class DataCreationPostRequestUtil {
 
         MediaType mediaType = requestBody.getContent().get(MEDIA_TYPE);
 
-        if(Objects.isNull(mediaType)) {
+        if (Objects.isNull(mediaType)) {
             log.warn("MediaType not found for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
             dataCase.setErrorMessage(String.format("MediaType not found for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
             dataCase.setBroken(true);
@@ -99,7 +102,7 @@ public class DataCreationPostRequestUtil {
                 bodyItem = buildBodyFromSchema(schema, companents, i);
             }
 
-            if(Objects.nonNull(bodyItem)) {
+            if (Objects.nonNull(bodyItem)) {
                 resultList.add(bodyItem);
             }
         }
@@ -124,14 +127,14 @@ public class DataCreationPostRequestUtil {
                 log.warn("Schema key not found for ref: {}", schema.get$ref());
             }
 
-        // real object
+            // real object
         } else if (MapUtils.isNotEmpty(schema.getProperties())) {
 
             Map<String, Schema> props = (Map<String, Schema>) schema.getProperties();
 
-            for (Map.Entry<String, Schema> entry: props.entrySet()) {
+            for (Map.Entry<String, Schema> entry : props.entrySet()) {
 
-                if(entry.getValue() instanceof ObjectSchema || StringUtils.isNotEmpty(entry.getValue().get$ref())) {
+                if (entry.getValue() instanceof ObjectSchema || StringUtils.isNotEmpty(entry.getValue().get$ref())) {
                     object.put(entry.getKey(), buildBodyFromSchema(entry.getValue(), companents, variantNumber));
 
                 } else if (entry.getValue() instanceof ArraySchema) {

@@ -4,6 +4,7 @@ import com.skg.apimonkey.domain.user.User;
 import com.skg.apimonkey.domain.user.UserSignUp;
 import com.skg.apimonkey.exception.UserAlreadyExistException;
 import com.skg.apimonkey.service.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Objects;
 
 
@@ -54,8 +53,7 @@ public class AuthenticationController {
     @PostMapping("/sign-up")
     public String registerUser(@ModelAttribute("user") @Valid UserSignUp userDto,
                                BindingResult bindingResult,
-                               Model model,
-                               HttpServletRequest request) {
+                               Model model) {
 
         model.addAttribute("title", "Register new user");
         model.addAttribute("description", "Register new user page");

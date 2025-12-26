@@ -1,9 +1,9 @@
 package com.skg.apimonkey.domain.data;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "user_data_case")
 public class UserDataCase implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
 

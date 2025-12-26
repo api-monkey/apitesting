@@ -1,7 +1,8 @@
 package com.skg.apimonkey.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import static com.skg.apimonkey.util.StringUtil.isValidEmail;
 

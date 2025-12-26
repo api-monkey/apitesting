@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 public class ApiMonkeyApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiMonkeyApplication.class, args);
-		log.info("*API Monkey started*");
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ApiMonkeyApplication.class, args);
+        log.info("*API Monkey started*");
+    }
 }

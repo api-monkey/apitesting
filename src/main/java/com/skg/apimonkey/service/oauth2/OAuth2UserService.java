@@ -1,9 +1,9 @@
 package com.skg.apimonkey.service.oauth2;
 
+import com.skg.apimonkey.domain.user.User;
 import com.skg.apimonkey.domain.user.UserType;
 import com.skg.apimonkey.domain.user.auth2.AuthProvider;
 import com.skg.apimonkey.domain.user.auth2.OAuth2UserInfo;
-import com.skg.apimonkey.domain.user.User;
 import com.skg.apimonkey.domain.user.auth2.OAuth2UserInfoFactory;
 import com.skg.apimonkey.domain.user.auth2.UserPrincipal;
 import com.skg.apimonkey.exception.OAuth2AuthenticationProcessingException;
@@ -46,15 +46,15 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     public UserPrincipal processOAuth2User(OAuth2UserRequest oAuth2UserRequest, Map<String, Object> attributes) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), attributes);
-        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
+        if (StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
         Optional<User> userOptional = userService.getUserByLogin(oAuth2UserInfo.getEmail());
         User user;
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             user = userOptional.get();
-            if(!user.getProvider().equals(AuthProvider.local) && !user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+            if (!user.getProvider().equals(AuthProvider.local) && !user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                         user.getProvider() + " account. Please use your " + user.getProvider() +
                         " account to login.");

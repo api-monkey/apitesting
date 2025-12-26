@@ -12,6 +12,7 @@ import com.skg.apimonkey.service.UserService;
 import com.skg.apimonkey.service.util.MappingUtil;
 import com.skg.apimonkey.service.util.WebUtil;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +110,6 @@ public class ApiMonkeyController {
 
     @GetMapping("/run-tests")
     public String runTestsPage(Model model,
-                               HttpServletRequest request,
                                HttpServletResponse response,
                                @RequestParam(value = "api", required = false) String hashId) {
 
