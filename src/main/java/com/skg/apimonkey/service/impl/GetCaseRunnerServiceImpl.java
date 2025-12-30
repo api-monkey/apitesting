@@ -55,7 +55,7 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
         request.addHeader("Accept", dataCase.getContentType());
         request.addHeader("Content-Type", dataCase.getContentType());
 
-        if(CollectionUtils.isNotEmpty(dataCase.getAuthHeaders())) {
+        if (CollectionUtils.isNotEmpty(dataCase.getAuthHeaders())) {
             dataCase.getAuthHeaders().forEach(i -> {
                 request.addHeader(i.getKey(), i.getValue());
             });

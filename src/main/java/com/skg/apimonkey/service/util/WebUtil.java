@@ -5,6 +5,7 @@ import com.skg.apimonkey.domain.model.SwaggerJsonResult;
 import com.skg.apimonkey.domain.model.TestDataCase;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,14 +13,16 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,7 +37,7 @@ public class WebUtil {
         Response result = new Response();
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(request)){
+             CloseableHttpResponse response = httpClient.execute(request)) {
 
             int responseCode = response.getStatusLine().getStatusCode();
             HttpEntity entity = response.getEntity();
@@ -59,7 +62,8 @@ public class WebUtil {
             try {
                 URL urlObj = new URL(url);
                 return new URL(urlObj.getProtocol(), urlObj.getHost(), urlObj.getFile()).toString();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         return url;
     }
@@ -84,7 +88,7 @@ public class WebUtil {
 
     public static void setHeaderParamsToRequest(TestDataCase dataCase, HttpRequestBase request) {
         ParametersDataCase inHeaderParams = dataCase.getInHeaderParameters().get(dataCase.getExecuteNumber());
-        if(Objects.nonNull(inHeaderParams) && CollectionUtils.isNotEmpty(inHeaderParams.getParameterItems())) {
+        if (Objects.nonNull(inHeaderParams) && CollectionUtils.isNotEmpty(inHeaderParams.getParameterItems())) {
             inHeaderParams.getParameterItems().forEach(i -> {
                 if (i.isRequired() || StringUtils.isNotEmpty(i.getValue())) {
                     request.addHeader(i.getName(), i.getValue());
@@ -99,16 +103,17 @@ public class WebUtil {
         try {
             uri = new URL(url);
             domain = new URL(uri.getProtocol(), uri.getHost(), "").toString();
-        } catch (MalformedURLException ignored) {}
+        } catch (MalformedURLException ignored) {
+        }
 
         return domain;
     }
 
     public static void fixServerUrl(SwaggerParseResult swagger, String passedUrl) {
 
-        if(Objects.nonNull(swagger) && CollectionUtils.isNotEmpty(swagger.getOpenAPI().getServers()) ) {
+        if (Objects.nonNull(swagger) && CollectionUtils.isNotEmpty(swagger.getOpenAPI().getServers())) {
 
-            for (Server server: swagger.getOpenAPI().getServers()) {
+            for (Server server : swagger.getOpenAPI().getServers()) {
 
                 if (StringUtils.startsWithIgnoreCase(server.getUrl(), "//") && !StringUtils.containsIgnoreCase(server.getUrl(), "http")) {
                     server.setUrl("https:" + server.getUrl());
@@ -117,14 +122,14 @@ public class WebUtil {
                 if (!StringUtils.containsIgnoreCase(server.getUrl(), "http")) {
 
                     String updPassedUrl = getDomainUrl(passedUrl);
-                    if(updPassedUrl.endsWith("/")) {
+                    if (updPassedUrl.endsWith("/")) {
                         updPassedUrl = updPassedUrl.substring(0, updPassedUrl.length() - 1);
                     }
                     String updServerUrl = server.getUrl();
-                    if(updServerUrl.startsWith("//")) {
+                    if (updServerUrl.startsWith("//")) {
                         updServerUrl = updServerUrl.replaceFirst("//", "");
                     }
-                    if(updServerUrl.startsWith("/")) {
+                    if (updServerUrl.startsWith("/")) {
                         updServerUrl = updServerUrl.replaceFirst("/", "");
                     }
 

@@ -1,6 +1,6 @@
 package com.skg.apimonkey.service.oauth2;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -10,10 +10,10 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class OAuth2OidcUserService extends OidcUserService {
 
-    @Autowired
-    private OAuth2UserService oAuth2UserService;
+    private final OAuth2UserService oAuth2UserService;
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
