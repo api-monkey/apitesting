@@ -1,27 +1,15 @@
 databaseChangeLog:
   - changeSet:
-      id: V1.create.user.table.1
-      author: vsingh
-      preConditions:
-        - onFail: MARK_RAN
-        - tableExists:
-            tableName: user
-      changes:
-        - dropTable:
-            tableName: user
-            cascadeConstraints: true
-
-  - changeSet:
-      id: V1.create.user.table.2
+      id: V1.create.users.table.1
       author: vsingh
       preConditions:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: user
+                tableName: users
       changes:
         - createTable:
-            tableName: user
+            tableName: users
             remarks: "User authentication table"
             columns:
               - column:
