@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: V2.create.swagger.data.table.1
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: swagger_data
+      changes:
+        - dropTable:
+            tableName: swagger_data
+            cascadeConstraints: true
+  - changeSet:
+      id: V2.create.swagger.data.table.2
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: swagger_data
+      changes:
+        - createTable:
+            tableName: swagger_data
+            remarks: "Swagger API documentation data storage"
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  remarks: "Primary key"
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_swagger_data_id
+                    nullable: false
+              - column:
+                  name: URL
+                  type: VARCHAR(255)
+                  remarks: "Swagger URL"
+              - column:
+                  name: PASSED_URL
+                  type: VARCHAR(500)
+                  remarks: "Passed URL parameter"
+              - column:
+                  name: HASH_ID
+                  type: VARCHAR(255)
+                  remarks: "Hash identifier"
+              - column:
+                  name: PAGE_CONTENT
+                  type: TEXT
+                  remarks: "Swagger page content"
+              - column:
+                  name: CREATED_DATE
+                  type: DATETIME
+                  remarks: "Record creation timestamp"
+              - column:
+                  name: UPDATED_DATE
+                  type: DATETIME
+                  remarks: "Record last update timestamp"
+  - changeSet:
+      id: V2.create.swagger.data.table.3
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: swagger_data
+      changes:
+        - createIndex:
+            indexName: URL_INDEX
+            tableName: swagger_data
+            columns:
+              - column:
+                  name: URL
+        - createIndex:
+            indexName: UPDATED_DATE_INDEX
+            tableName: swagger_data
+            columns:
+              - column:
+                  name: UPDATED_DATE

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: V3.swagger.data.table.changes.1
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: swagger_data
+            columnName: PAGE_CONTENT
+      changes:
+        - modifyDataType:
+            tableName: swagger_data
+            columnName: PAGE_CONTENT
+            newDataType: LONGTEXT

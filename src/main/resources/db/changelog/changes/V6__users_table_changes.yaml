@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: V6.users.table.changes.1
+      author: vsingh
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: FIRST_NAME
+                  type: VARCHAR(255)
+                  remarks: "User first name"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: LAST_NAME
+                  type: VARCHAR(255)
+                  remarks: "User last name"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED
+                  type: DATETIME
+                  remarks: "User creation timestamp"
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: V6.users.table.changes.2
+      author: vsingh
+      changes:
+        - modifyDataType:
+            tableName: users
+            columnName: LOGIN
+            newDataType: VARCHAR(255)
+        - modifyDataType:
+            tableName: users
+            columnName: PASSWORD
+            newDataType: VARCHAR(255)
+  - changeSet:
+      id: V6.users.table.changes.3
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: persistent_logins
+      changes:
+        - createTable:
+            tableName: persistent_logins
+            remarks: "Persistent login tokens table"
+            columns:
+              - column:
+                  name: USERNAME
+                  type: VARCHAR(255)
+                  remarks: "Username"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SERIES
+                  type: VARCHAR(64)
+                  remarks: "Token series identifier"
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_persistent_logins_series
+                    nullable: false
+              - column:
+                  name: TOKEN
+                  type: VARCHAR(64)
+                  remarks: "Authentication token"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LAST_USED
+                  type: TIMESTAMP
+                  remarks: "Last usage timestamp"
+                  constraints:
+                    nullable: false

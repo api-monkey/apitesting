@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: V1.create.users.table.1
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: users
+      changes:
+        - createTable:
+            tableName: users
+            remarks: "User authentication table"
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  startWith: 3
+                  remarks: "Primary key"
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_user_id
+                    nullable: false
+              - column:
+                  name: LOGIN
+                  type: VARCHAR(95)
+                  remarks: "User login"
+              - column:
+                  name: PASSWORD
+                  type: VARCHAR(95)
+                  remarks: "User password hash"
+              - column:
+                  name: TYPE
+                  type: VARCHAR(45)
+                  remarks: "User type/role"

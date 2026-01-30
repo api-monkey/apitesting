@@ -5,8 +5,14 @@ To get started, you need a public facing API with swagger docs. Point to the API
 
 # Database Configuration
 
+The application supports two databases with spring profiles:
+- **h2** - In-memory H2 database (default, for development/testing)
+- **mysql** - MySQL database (for production)
+
+
 ## Prerequisites
 
+# For using MySQL database:
 Before running the Spring Boot application, ensure that:
 
 1. MySQL database server is installed and running

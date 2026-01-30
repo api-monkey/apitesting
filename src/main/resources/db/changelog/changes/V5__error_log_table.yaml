@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: V5.error.log.table.1
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: error_messages_log
+      changes:
+        - createTable:
+            tableName: error_messages_log
+            remarks: "Application error messages and stack traces log"
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  remarks: "Primary key"
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_error_messages_log_id
+                    nullable: false
+              - column:
+                  name: URL
+                  type: VARCHAR(255)
+                  remarks: "URL where error occurred"
+              - column:
+                  name: USER_LOGIN
+                  type: VARCHAR(255)
+                  remarks: "User login who encountered the error"
+              - column:
+                  name: ERROR_MESSAGE
+                  type: TEXT
+                  remarks: "Error message description"
+              - column:
+                  name: STACK_TRACE
+                  type: LONGTEXT
+                  remarks: "Full stack trace of the error"
+              - column:
+                  name: CREATED_DATE
+                  type: DATETIME
+                  remarks: "Error occurrence timestamp"

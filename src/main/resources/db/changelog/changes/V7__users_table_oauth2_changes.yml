@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: V7.users.table.oauth2.changes.1
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: users
+                columnName: PROVIDER
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: PROVIDER
+                  type: VARCHAR(95)
+                  remarks: "Authentication provider"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PROVIDER_ID
+                  type: VARCHAR(255)
+                  remarks: "Provider user identifier"
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: V7.users.table.oauth2.changes.2
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: users
+                columnName: IMAGE_URL
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: IMAGE_URL
+                  type: VARCHAR(255)
+                  remarks: "User profile image URL"
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: V7.users.table.oauth2.changes.3
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: users
+                columnName: EMAIL_VERIFIED
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: EMAIL_VERIFIED
+                  type: TINYINT(1)
+                  remarks: "Email verification status"
+                  defaultValueNumeric: '0'
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: V7.users.table.oauth2.changes.4
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: users
+        - columnExists:
+            tableName: users
+            columnName: LOGIN
+      changes:
+        - addNotNullConstraint:
+            tableName: users
+            columnName: LOGIN
+            columnDataType: VARCHAR(255)
+
+  - changeSet:
+      id: V7.users.table.oauth2.changes.5
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: users
+        - columnExists:
+            tableName: users
+            columnName: TYPE
+      changes:
+        - addNotNullConstraint:
+            tableName: users
+            columnName: TYPE
+            columnDataType: VARCHAR(45)

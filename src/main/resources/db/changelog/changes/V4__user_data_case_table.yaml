@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: V4.users.data.case.table.1
+      author: vsingh
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: user_data_case
+      changes:
+        - createTable:
+            tableName: user_data_case
+            remarks: "User test case data storage"
+            columns:
+              - column:
+                  name: ID
+                  type: INT
+                  autoIncrement: true
+                  remarks: "Primary key"
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_user_data_case_id
+                    nullable: false
+              - column:
+                  name: DATA_ID
+                  type: VARCHAR(255)
+                  remarks: "Data identifier"
+              - column:
+                  name: DATA_NAME
+                  type: VARCHAR(255)
+                  remarks: "Data case name"
+              - column:
+                  name: SWAGGER_DATA_ID
+                  type: INT
+                  remarks: "Reference to swagger_data table"
+              - column:
+                  name: USER_ID
+                  type: INT
+                  remarks: "Reference to user table"
+              - column:
+                  name: DATA_CASE_CONTENT
+                  type: LONGTEXT
+                  remarks: "Test case content in JSON or XML format"
+              - column:
+                  name: UPDATED_DATE
+                  type: DATETIME
+                  remarks: "Record last update timestamp"
+              - column:
+                  name: CREATED_DATE
+                  type: DATETIME
+                  remarks: "Record creation timestamp"
