@@ -11,5 +11,5 @@ import java.util.List;
 public class ParametersDataCase {
     private String modifiedPath;
     private List<ParameterItem> parameterItems;
-    private boolean isNoParams;
+    private Boolean isNoParams;
 }

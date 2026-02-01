@@ -66,21 +66,20 @@ class TestDataCreationServiceTests {
                 for (int i = 0; i < dataCase.getRequestParamsVariants().size(); i++) {
 
                     ParametersDataCase parameterItem = dataCase.getRequestParamsVariants().get(i);
-                    long pathParamsCount = parameterItem.isNoParams() ? 0 : parameterItem.getParameterItems().stream().filter(j -> !j.isInPath()).count();
-                    boolean isNoParams = parameterItem.isNoParams() || pathParamsCount == 0;
+                    long pathParamsCount = Boolean.TRUE.equals(parameterItem.getIsNoParams()) ? 0
+                            : parameterItem.getParameterItems().stream().filter(j -> !j.isInPath()).count();
+                    boolean isNoParams = Boolean.TRUE.equals(parameterItem.getIsNoParams()) || pathParamsCount == 0;
 
                     log.info("Request param variant [{}, {}] {}:{}{}",
                             dataCase.getRequestType().name(),
                             objectMapper.writeValueAsString(parameterItem.getModifiedPath()),
                             i + 1,
                             System.lineSeparator(),
-                            isNoParams ?
-                                    "<no params>" :
-                                    parameterItem.getParameterItems().stream()
+                            isNoParams ? "<no params>"
+                                    : parameterItem.getParameterItems().stream()
                                             .filter(j -> !j.isInPath())
                                             .map(j -> String.format("%s = %s", j.getName(), j.getValue()))
-                                            .collect(Collectors.joining(System.lineSeparator()))
-                    );
+                                            .collect(Collectors.joining(System.lineSeparator())));
                 }
             }
             if (CollectionUtils.isNotEmpty(dataCase.getRequestBodyVariants())) {
@@ -132,7 +131,9 @@ class TestDataCreationServiceTests {
         Response response = caseRunnerManager.runDataCase(dataCase);
 
         log.info("Response: {}", response.getStatusLine().toString());
-        log.info("Body: \n{}", response.getBody() == null ? "empty" : objectMapper.writeValueAsString(objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), HashMap.class)));
+        log.info("Body: \n{}", response.getBody() == null ? "empty"
+                : objectMapper.writeValueAsString(
+                        objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), HashMap.class)));
 
         assertNotNull(response);
     }
@@ -160,7 +161,8 @@ class TestDataCreationServiceTests {
                 System.out.println("empty");
 
             } else if (isJson(new String(response.getBody(), StandardCharsets.UTF_8))) {
-                System.out.println(objectMapper.writeValueAsString(objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), Object.class)));
+                System.out.println(objectMapper.writeValueAsString(
+                        objectMapper.readValue(new String(response.getBody(), StandardCharsets.UTF_8), Object.class)));
 
             } else {
                 System.out.println(new String(response.getBody(), StandardCharsets.UTF_8));

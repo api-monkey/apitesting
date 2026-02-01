@@ -35,12 +35,12 @@ public class CaseRunnerManager {
             case DELETE:
             case HEAD:
                 log.warn("Data generation for method {} not implemented yet!", dataCase.getRequestType().name());
-                dataCase.setBroken(true);
+                dataCase.setIsBroken(true);
                 return null;
 
             default:
                 log.warn("Unknown RequestType [{}]! It has not implemented yet!", dataCase.getRequestType().name());
-                dataCase.setBroken(true);
+                dataCase.setIsBroken(true);
                 return null;
         }
     }

@@ -32,8 +32,9 @@ public class GetCaseRunnerServiceImpl implements CaseRunnerService {
 
         ParametersDataCase getParamsObj = dataCase.getRequestParamsVariants().get(dataCase.getExecuteNumber());
 
-        long pathParamsCount = getParamsObj.isNoParams() ? 0 : getParamsObj.getParameterItems().stream().filter(j -> !j.isInPath()).count();
-        boolean isNoParams = getParamsObj.isNoParams() || pathParamsCount == 0;
+        long pathParamsCount = Boolean.TRUE.equals(getParamsObj.getIsNoParams()) ? 0
+                : getParamsObj.getParameterItems().stream().filter(j -> !j.isInPath()).count();
+        boolean isNoParams = Boolean.TRUE.equals(getParamsObj.getIsNoParams()) || pathParamsCount == 0;
 
         URIBuilder builder = new URIBuilder(dataCase.getServerApiPathes().get(0) + getParamsObj.getModifiedPath());
         if (!isNoParams) {

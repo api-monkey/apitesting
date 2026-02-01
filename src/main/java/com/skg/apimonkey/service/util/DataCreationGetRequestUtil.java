@@ -20,11 +20,10 @@ import java.util.stream.Collectors;
 import static com.skg.apimonkey.service.util.RequestValuesUtil.getInHeadParameters;
 import static com.skg.apimonkey.service.util.RequestValuesUtil.getInPathOrQueryParameters;
 
-
 @Slf4j
 public class DataCreationGetRequestUtil {
 
-    //supported media type
+    // supported media type
     private final static String MEDIA_TYPE = "application/json";
 
     public static void generateGetParameters(TestDataCase dataCase, OpenAPI openApi, Integer variantNumber) {
@@ -33,26 +32,30 @@ public class DataCreationGetRequestUtil {
 
     public static void generateParameters(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
 
-//        log.info("generate body for GET [{}]", dataCase.getMethodName());
+        // log.info("generate body for GET [{}]", dataCase.getMethodName());
         PathItem pathItem = dataCase.getPathItem();
 
         List<Parameter> parameters = getInPathOrQueryParameters(pathItem.getGet().getParameters());
         List<Parameter> inHeaderParameters = getInHeadParameters(pathItem.getGet().getParameters());
 
         dataCase.setContentType(MEDIA_TYPE);
-        dataCase.setSummary(StringUtils.isEmpty(pathItem.getGet().getSummary()) ? pathItem.getGet().getDescription() : pathItem.getGet().getSummary());
+        dataCase.setSummary(StringUtils.isEmpty(pathItem.getGet().getSummary()) ? pathItem.getGet().getDescription()
+                : pathItem.getGet().getSummary());
         dataCase.setServerApiPathes(openApi.getServers().stream().map(Server::getUrl).collect(Collectors.toList()));
 
-        //create in header params
-        List<ParametersDataCase> inHeaderDataCases = buildParamsVariantsFromSchema(inHeaderParameters, dataCase.getMethodName(), variantNumber);
+        // create in header params
+        List<ParametersDataCase> inHeaderDataCases = buildParamsVariantsFromSchema(inHeaderParameters,
+                dataCase.getMethodName(), variantNumber);
         dataCase.setInHeaderParameters(inHeaderDataCases);
 
-        //create request params
-        List<ParametersDataCase> paramsVariants = buildParamsVariantsFromSchema(parameters, dataCase.getMethodName(), variantNumber);
+        // create request params
+        List<ParametersDataCase> paramsVariants = buildParamsVariantsFromSchema(parameters, dataCase.getMethodName(),
+                variantNumber);
         dataCase.setRequestParamsVariants(paramsVariants);
     }
 
-    public static List<ParametersDataCase> buildParamsVariantsFromSchema(List<Parameter> parameters, String query, int variants) {
+    public static List<ParametersDataCase> buildParamsVariantsFromSchema(List<Parameter> parameters, String query,
+            int variants) {
 
         List<ParametersDataCase> resultList = new ArrayList<>();
 
@@ -60,7 +63,7 @@ public class DataCreationGetRequestUtil {
         if (CollectionUtils.isEmpty(parameters)) {
             ParametersDataCase paramsObject = new ParametersDataCase();
             paramsObject.setModifiedPath(query);
-            paramsObject.setNoParams(true);
+            paramsObject.setIsNoParams(true);
             for (int i = 0; i < variants; i++) {
                 resultList.add(paramsObject);
             }
@@ -79,7 +82,7 @@ public class DataCreationGetRequestUtil {
                 ParameterItem parameterItem = new ParameterItem();
                 parameterItem.setName(param.getName());
 
-                //find value
+                // find value
                 Schema schema;
                 if (param.getSchema() instanceof ArraySchema) {
                     schema = ((ArraySchema) param.getSchema()).getItems();
