@@ -26,7 +26,8 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
     @Override
     public List<TestDataCase> generateTestDataCases(SwaggerParseResult swaggerConfig, Integer variantNumber) {
 
-        if (Objects.isNull(swaggerConfig) || Objects.isNull(swaggerConfig.getOpenAPI()) || Objects.isNull(swaggerConfig.getOpenAPI().getPaths())) {
+        if (Objects.isNull(swaggerConfig) || Objects.isNull(swaggerConfig.getOpenAPI())
+                || Objects.isNull(swaggerConfig.getOpenAPI().getPaths())) {
             log.warn("Swagger config is broken. Test data generation skipped");
             return null;
         }
@@ -40,7 +41,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
         });
 
         return dataCaseList.stream()
-                .filter(i -> !i.isBroken())
+                .filter(i -> !Boolean.TRUE.equals(i.getIsBroken()))
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +50,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
         if (CollectionUtils.isEmpty(openApi.getServers())) {
             log.warn("Server url not found");
             dataCase.setErrorMessage("Server url not found");
-            dataCase.setBroken(true);
+            dataCase.setIsBroken(true);
             return;
         }
 
@@ -66,7 +67,7 @@ public class DataCasesCreationServiceImpl implements DataCreationService {
             case DELETE:
             case HEAD:
                 log.warn("Data generation for method {} not implemented yet!", dataCase.getRequestType().name());
-                dataCase.setBroken(true);
+                dataCase.setIsBroken(true);
                 break;
         }
     }

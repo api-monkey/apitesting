@@ -23,11 +23,10 @@ import java.util.stream.Collectors;
 import static com.skg.apimonkey.service.util.DataCreationGetRequestUtil.buildParamsVariantsFromSchema;
 import static com.skg.apimonkey.service.util.RequestValuesUtil.getInHeadParameters;
 
-
 @Slf4j
 public class DataCreationPostRequestUtil {
 
-    //supported media type
+    // supported media type
     private final static String MEDIA_TYPE = "application/json";
 
     public static void generatePostBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber) {
@@ -38,9 +37,10 @@ public class DataCreationPostRequestUtil {
         generateBody(dataCase, openApi, variantNumber, RequestType.PUT);
     }
 
-    public static void generateBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber, RequestType requestType) {
+    public static void generateBody(TestDataCase dataCase, OpenAPI openApi, int variantNumber,
+            RequestType requestType) {
 
-//        log.info("generate body for POST / PUT [{}]", dataCase.getMethodName());
+        // log.info("generate body for POST / PUT [{}]", dataCase.getMethodName());
         PathItem pathItem = dataCase.getPathItem();
 
         RequestBody requestBody = null;
@@ -49,12 +49,15 @@ public class DataCreationPostRequestUtil {
         if (requestType.equals(RequestType.POST)) {
             requestBody = pathItem.getPost().getRequestBody();
             inHeaderParameters = getInHeadParameters(pathItem.getPost().getParameters());
-            dataCase.setSummary(StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription() : pathItem.getPost().getSummary());
+            dataCase.setSummary(
+                    StringUtils.isEmpty(pathItem.getPost().getSummary()) ? pathItem.getPost().getDescription()
+                            : pathItem.getPost().getSummary());
         }
         if (requestType.equals(RequestType.PUT)) {
             requestBody = pathItem.getPut().getRequestBody();
             inHeaderParameters = getInHeadParameters(pathItem.getPut().getParameters());
-            dataCase.setSummary(StringUtils.isEmpty(pathItem.getPut().getSummary()) ? pathItem.getPut().getDescription() : pathItem.getPut().getSummary());
+            dataCase.setSummary(StringUtils.isEmpty(pathItem.getPut().getSummary()) ? pathItem.getPut().getDescription()
+                    : pathItem.getPut().getSummary());
         }
 
         dataCase.setContentType(MEDIA_TYPE);
@@ -64,25 +67,31 @@ public class DataCreationPostRequestUtil {
                 .collect(Collectors.toList()));
 
         if (Objects.isNull(requestBody)) {
-            log.warn("RequestBody empty for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
-            dataCase.setErrorMessage(String.format("RequestBody empty for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
+            log.warn("RequestBody empty for dataCase name: {}, method: {}", dataCase.getMethodName(),
+                    dataCase.getRequestType().name());
+            dataCase.setErrorMessage(String.format("RequestBody empty for dataCase name: %s, method: %s",
+                    dataCase.getMethodName(), dataCase.getRequestType().name()));
             return;
         }
 
         MediaType mediaType = requestBody.getContent().get(MEDIA_TYPE);
 
         if (Objects.isNull(mediaType)) {
-            log.warn("MediaType not found for dataCase name: {}, method: {}", dataCase.getMethodName(), dataCase.getRequestType().name());
-            dataCase.setErrorMessage(String.format("MediaType not found for dataCase name: %s, method: %s", dataCase.getMethodName(), dataCase.getRequestType().name()));
-            dataCase.setBroken(true);
+            log.warn("MediaType not found for dataCase name: {}, method: {}", dataCase.getMethodName(),
+                    dataCase.getRequestType().name());
+            dataCase.setErrorMessage(String.format("MediaType not found for dataCase name: %s, method: %s",
+                    dataCase.getMethodName(), dataCase.getRequestType().name()));
+            dataCase.setIsBroken(true);
             return;
         }
 
-        List<ParametersDataCase> inHeaderDataCases = buildParamsVariantsFromSchema(inHeaderParameters, dataCase.getMethodName(), variantNumber);
+        List<ParametersDataCase> inHeaderDataCases = buildParamsVariantsFromSchema(inHeaderParameters,
+                dataCase.getMethodName(), variantNumber);
         dataCase.setInHeaderParameters(inHeaderDataCases);
 
-        //create request body
-        List<Object> bodyObjectVariants = buildBodyVariantsFromSchema(mediaType.getSchema(), openApi.getComponents(), variantNumber);
+        // create request body
+        List<Object> bodyObjectVariants = buildBodyVariantsFromSchema(mediaType.getSchema(), openApi.getComponents(),
+                variantNumber);
         dataCase.setRequestBodyVariants(bodyObjectVariants);
     }
 
@@ -95,7 +104,9 @@ public class DataCreationPostRequestUtil {
             if (schema instanceof ArraySchema) {
                 List<Object> arrayList = new ArrayList<>();
                 Schema inArraySchema = ((ArraySchema) schema).getItems();
-                arrayList.add(RequestValuesUtil.isObject(inArraySchema) ? buildBodyFromSchema(inArraySchema, companents, i) : buildBodyFromSchema(schema, companents, i));
+                arrayList.add(
+                        RequestValuesUtil.isObject(inArraySchema) ? buildBodyFromSchema(inArraySchema, companents, i)
+                                : buildBodyFromSchema(schema, companents, i));
                 bodyItem = arrayList;
 
             } else {
@@ -109,7 +120,6 @@ public class DataCreationPostRequestUtil {
         return resultList;
     }
 
-
     private static Map<String, Object> buildBodyFromSchema(Schema schema, Components companents, int variantNumber) {
 
         Map<String, Object> object = new HashMap<>();
@@ -117,7 +127,8 @@ public class DataCreationPostRequestUtil {
         // ref to object
         if (StringUtils.isNotEmpty(schema.get$ref())) {
 
-            String schemaKey = Arrays.stream(schema.get$ref().split("/")).filter(StringUtils::isNotEmpty).reduce((first, second) -> second).orElse(null);
+            String schemaKey = Arrays.stream(schema.get$ref().split("/")).filter(StringUtils::isNotEmpty)
+                    .reduce((first, second) -> second).orElse(null);
 
             if (StringUtils.isNotEmpty(schemaKey)) {
                 Schema innerSchema = companents.getSchemas().get(schemaKey);
@@ -140,7 +151,9 @@ public class DataCreationPostRequestUtil {
                 } else if (entry.getValue() instanceof ArraySchema) {
                     List<Object> arrayList = new ArrayList<>();
                     Schema inArraySchema = ((ArraySchema) entry.getValue()).getItems();
-                    arrayList.add(RequestValuesUtil.isObject(inArraySchema) ? buildBodyFromSchema(inArraySchema, companents, variantNumber) : RequestValuesUtil.getValueByType(inArraySchema, variantNumber));
+                    arrayList.add(RequestValuesUtil.isObject(inArraySchema)
+                            ? buildBodyFromSchema(inArraySchema, companents, variantNumber)
+                            : RequestValuesUtil.getValueByType(inArraySchema, variantNumber));
                     object.put(entry.getKey(), arrayList);
 
                 } else {

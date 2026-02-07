@@ -28,7 +28,7 @@ public class TestDataCase implements Serializable {
     private List<AuthHeader> authHeaders;
     private List<ParametersDataCase> inHeaderParameters;
 
-    private boolean isBroken;
+    private Boolean isBroken;
     @JsonIgnore
     private String errorMessage;
 
